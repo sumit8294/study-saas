@@ -12,6 +12,10 @@ import PartnersSection from "@/components/sections/PartnersSection";
 import ContactSection from "@/components/sections/ContactSection";
 import NewsLetterSection from "@/components/sections/NewsLetterSection";
 import Footer from "@/components/ui/Footer";
+import StudentPortalSection from "@/components/sections/StudentPortalSection";
+import UniversityPortalSection from "@/components/sections/UniversityPortalSection";
+import AgentPortalSection from "@/components/sections/AgentPortalSection";
+import ProductsSection from "@/components/sections/ProductsSection";
 
 export default function Page() {
     return (
@@ -19,6 +23,8 @@ export default function Page() {
             <Hero />
             <PartnersSection />
             <FeatureSection />
+            {/* <PortalShowcase /> */}
+            <ProductsSection />
             <StatsSection />
             <CTASection />
             <GridSection />
@@ -26,6 +32,11 @@ export default function Page() {
             <BlogSection />
             <ContactSection />
             <NewsLetterSection />
+
+            {/* <StudentPortalSection />
+            <UniversityPortalSection />
+            <AgentPortalSection /> */}
+
             <Footer />
         </>
     );
