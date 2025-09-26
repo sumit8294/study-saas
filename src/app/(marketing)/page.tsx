@@ -11,6 +11,7 @@ import BlogSection from "@/components/sections/BlogSection";
 import PartnersSection from "@/components/sections/PartnersSection";
 import ContactSection from "@/components/sections/ContactSection";
 import NewsLetterSection from "@/components/sections/NewsLetterSection";
+import Footer from "@/components/ui/Footer";
 
 export default function Page() {
     return (
@@ -25,6 +26,7 @@ export default function Page() {
             <BlogSection />
             <ContactSection />
             <NewsLetterSection />
+            <Footer />
         </>
     );
 }

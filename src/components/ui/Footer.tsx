@@ -1,67 +1,167 @@
+import { Facebook, Instagram, Github, Youtube, Twitter } from "lucide-react";
+
 export default function Footer() {
     return (
-        <footer className="bg-[#074595] text-white py-6 relative">
-            <section className="bg-[#074595] text-center py-20 text-white">
-                <h2 className="text-gray-300 text-lg mb-4">
-                    The backbone of your study abroad journey
-                </h2>
-                <h1 className="text-3xl md:text-5xl font-bold text-[#fff] mb-6">
-                    Manage Applications, Deadlines, and Offers in One Place
-                </h1>
-                <button className="bg-[#ffa81b] hover:bg-[#ffa81b] text-white px-6 py-3 rounded-full text-lg font-semibold transition">
-                    Start Free Trial
-                </button>
-            </section>
+        <footer className="bg-[#0B1220] text-gray-400">
+            <div className="max-w-7xl mx-auto px-6 py-12">
+                {/* Top Section */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    {/* Logo and Description */}
+                    <div>
+                        {/* <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
+                            <span className="text-white text-lg font-bold">
+                                Your Company
+                            </span>
+                        </div> */}
+                        <p className="mt-4 text-sm max-w-xs">
+                            One platform to scale your student recruitment
+                            network.
+                        </p>
+                    </div>
 
-            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-                {/* Copyright */}
-                <p className="text-sm text-gray-300 text-center md:text-left">
-                    ApplyTech © {new Date().getFullYear()}. All rights reserved.
-                </p>
-
-                {/* Links */}
-                <div className="flex space-x-6 my-4 md:my-0">
-                    <a
-                        href="/terms"
-                        className="text-gray-300 hover:text-white text-sm transition"
-                    >
-                        Terms and Conditions
-                    </a>
-                    <a
-                        href="/privacy"
-                        className="text-gray-300 hover:text-white text-sm transition"
-                    >
-                        Privacy Policy
-                    </a>
+                    {/* Social Icons */}
+                    <div className="flex space-x-5 mt-6 md:mt-0">
+                        <a href="#" className="hover:text-white transition">
+                            <Facebook size={20} />
+                        </a>
+                        <a href="#" className="hover:text-white transition">
+                            <Instagram size={20} />
+                        </a>
+                        <a href="#" className="hover:text-white transition">
+                            <Twitter size={20} />
+                        </a>
+                        <a href="#" className="hover:text-white transition">
+                            <Github size={20} />
+                        </a>
+                        <a href="#" className="hover:text-white transition">
+                            <Youtube size={20} />
+                        </a>
+                    </div>
                 </div>
 
-                {/* Made with love */}
-                <div className="flex items-center space-x-2">
-                    <span className="text-pink-500 text-xl">❤️</span>
-                    <p className="text-sm text-gray-300">
-                        Built with love for global students
-                    </p>
-                </div>
-            </div>
+                {/* Divider */}
+                <div className="border-t border-gray-800 my-8"></div>
 
-            {/* Floating Chat Icon */}
-            <div className="absolute bottom-6 right-6">
-                <button className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg transition">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.83L3 20l1.32-3.29A8.97 8.97 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        />
-                    </svg>
-                </button>
+                {/* Footer Links */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                    {/* Solutions */}
+                    <div>
+                        <h3 className="text-white font-semibold mb-4">
+                            Solutions
+                        </h3>
+                        <ul className="space-y-2 text-sm">
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Marketing
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Analytics
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Automation
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Commerce
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Insights
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Support */}
+                    <div>
+                        <h3 className="text-white font-semibold mb-4">
+                            Support
+                        </h3>
+                        <ul className="space-y-2 text-sm">
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Submit ticket
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Documentation
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Guides
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Company */}
+                    <div>
+                        <h3 className="text-white font-semibold mb-4">
+                            Company
+                        </h3>
+                        <ul className="space-y-2 text-sm">
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    About
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Blog
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Jobs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Press
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Legal */}
+                    <div>
+                        <h3 className="text-white font-semibold mb-4">Legal</h3>
+                        <ul className="space-y-2 text-sm">
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Terms of service
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    Privacy policy
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-white">
+                                    License
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-800 my-8"></div>
+
+                {/* Bottom Section */}
+                <div className="text-center text-sm text-gray-500">
+                    © 2024 Your Company, Inc. All rights reserved.
+                </div>
             </div>
         </footer>
     );
