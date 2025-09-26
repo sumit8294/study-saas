@@ -10,8 +10,8 @@ export default function Hero() {
                     {/* Left Text Content */}
                     <div>
                         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
-                            One Platform to Scale Your Student Recruitment
-                            Network.
+                            One platform to scale your student recruitment
+                            network.
                         </h1>
                         <p className="text-lg text-gray-300 mb-8">
                             Centralize applications, manage sub-agents, and
