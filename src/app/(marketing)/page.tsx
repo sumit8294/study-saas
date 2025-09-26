@@ -16,8 +16,8 @@ export default function Page() {
     return (
         <>
             <Hero />
-            <FeatureSection />
             <PartnersSection />
+            <FeatureSection />
             <StatsSection />
             <CTASection />
             <GridSection />
