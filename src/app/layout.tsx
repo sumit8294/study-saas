@@ -10,7 +10,7 @@ export default function RootLayout({
         <html lang="en">
             <body className="bg-white text-gray-900 antialiased">
                 <Header />
-                <main className="pt-16">{children}</main>
+                <main className="">{children}</main>
             </body>
         </html>
     );
