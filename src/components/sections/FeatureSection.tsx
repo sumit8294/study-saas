@@ -13,7 +13,7 @@ export default function ProblemSolutionSection() {
                         </div>
 
                         <h3 className="mt-2 text-lg font-bold">
-                            Sub-Agent Chaos?
+                            Sub-agent chaos?
                         </h3>
                         <p className="mt-4 text-gray-400 text-sm leading-relaxed">
                             Onboard, train, and manage sub-agents from a single,
@@ -29,7 +29,7 @@ export default function ProblemSolutionSection() {
                         </div>
 
                         <h3 className="mt-2 text-lg font-bold">
-                            Slow Applications?
+                            Slow applications?
                         </h3>
                         <p className="mt-4 text-gray-400 text-sm leading-relaxed">
                             Cut processing time by up to 50% with automated
@@ -45,7 +45,7 @@ export default function ProblemSolutionSection() {
                         </div>
 
                         <h3 className="mt-2 text-lg font-bold">
-                            No Visibility?
+                            No visibility?
                         </h3>
                         <p className="mt-4 text-gray-400 text-sm leading-relaxed">
                             Track every step — from student application to
