@@ -76,19 +76,15 @@ export default function ProductsSection() {
             {/* ===== Layout Grid ===== */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
                 {/* ===== Sidebar ===== */}
-                <div className="md:col-span-1">
-                    <div className="md:sticky md:top-24">
-                        <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
-                            Products
-                        </h2>
-                        <ul className="flex md:flex-col gap-4 justify-center">
-                            {products.map((product) => (
-                                <li
-                                    key={product.id}
-                                    className={`cursor-pointer px-4 py-2 rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                <div className="lg:col-span-1">
+                    <div className="sticky top-24">
+                        {products.map((product, index) => (
+                            <div key={product.id}>
+                                <div
+                                    className={`cursor-pointer py-5 transition-all duration-300 ${
                                         activeTab === product.id
-                                            ? "bg-indigo-500 text-white"
-                                            : "bg-gray-800 text-gray-400"
+                                            ? "opacity-100"
+                                            : "opacity-60 hover:opacity-80"
                                     }`}
                                     onClick={() => {
                                         const section = document.getElementById(
@@ -100,20 +96,39 @@ export default function ProductsSection() {
                                         });
                                     }}
                                 >
-                                    {product.title}
-                                </li>
-                            ))}
-                        </ul>
+                                    <h3 className="text-lg font-semibold">
+                                        {product.title}
+                                    </h3>
+                                    {activeTab === product.id && (
+                                        <p className="mt-2 text-sm text-gray-400">
+                                            {product.description}
+                                        </p>
+                                    )}
+                                    {activeTab === product.id && (
+                                        <button className="mt-3 text-sm text-white font-medium flex items-center gap-1 group">
+                                            Learn more
+                                            <span className="group-hover:translate-x-1 transition-transform">
+                                                ›
+                                            </span>
+                                        </button>
+                                    )}
+                                </div>
+                                {/* Divider line */}
+                                {index !== products.length - 1 && (
+                                    <div className="h-px bg-gray-800" />
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
                 {/* ===== Scrollable Content ===== */}
-                <div className="md:col-span-3 space-y-20">
+                <div className="md:col-span-3 mt-4">
                     {/* ===== Student Portal ===== */}
                     <div
                         ref={studentRef}
                         id="student"
-                        className="min-h-[70vh] flex flex-col md:flex-row items-center gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row gap-8"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -169,7 +184,7 @@ export default function ProductsSection() {
                     <div
                         ref={agentRef}
                         id="agent"
-                        className="min-h-[70vh] flex flex-col md:flex-row items-center gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row   gap-8"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -224,7 +239,7 @@ export default function ProductsSection() {
                     <div
                         ref={universityRef}
                         id="university"
-                        className="min-h-[70vh] flex flex-col md:flex-row items-center gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row   gap-8"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
