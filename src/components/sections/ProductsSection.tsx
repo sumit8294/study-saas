@@ -52,6 +52,7 @@ export default function ProductsSection() {
     return (
         <section className="relative isolate  w-full bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8">
             {/* ===== Background Gradients ===== */}
+
             <div
                 aria-hidden="true"
                 className="absolute bottom-0 right-0 w-[300px] h-[300px] -z-10 opacity-40 pointer-events-none"
@@ -78,6 +79,10 @@ export default function ProductsSection() {
                 {/* ===== Sidebar ===== */}
                 <div className="lg:col-span-1">
                     <div className="sticky top-24">
+                        {/* <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
+                            One platform to scale your student recruitment
+                            network.
+                        </h1> */}
                         {products.map((product, index) => (
                             <div key={product.id}>
                                 <div
