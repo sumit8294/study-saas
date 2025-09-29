@@ -16,6 +16,7 @@ import {
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 import ApplicationStatusCard from "@/components/admin/ApplicationStatusCard";
+import { DollarSign } from "lucide-react";
 
 export default function Dashboard() {
     return (
@@ -137,7 +138,7 @@ export default function Dashboard() {
                 </h2>
 
                 {/* Cards Container */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Card 1 */}
                     <div className="bg-[#1a2534] rounded-xl border border-white/10  shadow-md flex flex-col justify-between">
                         <div className="flex items-center space-x-4 p-6">
@@ -145,12 +146,10 @@ export default function Dashboard() {
                                 <UserGroupIcon className="h-6 w-6 text-white" />
                             </div>
                             <div>
-                                <p className="text-gray-400 text-sm">
-                                    Total Applications
-                                </p>
+                                <p className="text-gray-400 text-sm">Tenants</p>
                                 <div className="flex items-center space-x-2">
                                     <p className="text-white text-2xl font-semibold">
-                                        71,897
+                                        660
                                     </p>
                                     <span className="text-green-400 text-sm font-medium">
                                         ↑ 122
@@ -160,7 +159,7 @@ export default function Dashboard() {
                         </div>
                         <a
                             href="#"
-                            className="mt-6 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
+                            className="mt-2 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
                         >
                             View all
                         </a>
@@ -174,7 +173,7 @@ export default function Dashboard() {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm">
-                                    Total Students
+                                    On Trail Tenants
                                 </p>
                                 <div className="flex items-center space-x-2">
                                     <p className="text-white text-2xl font-semibold">
@@ -188,7 +187,7 @@ export default function Dashboard() {
                         </div>
                         <a
                             href="#"
-                            className="mt-6 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
+                            className="mt-2 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
                         >
                             View all
                         </a>
@@ -198,11 +197,11 @@ export default function Dashboard() {
                     <div className="bg-[#1a2534] rounded-xl border border-white/10  shadow-md flex flex-col justify-between">
                         <div className="flex items-center space-x-4 p-6">
                             <div className="bg-purple-600 p-3 rounded-lg">
-                                <UserGroupIcon className="h-6 w-6 text-white" />
+                                <DollarSign className="h-6 w-6 text-white" />
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm">
-                                    Open Tickets
+                                    Pending Amount
                                 </p>
                                 <div className="flex items-center space-x-2">
                                     <p className="text-white text-2xl font-semibold">
@@ -216,9 +215,37 @@ export default function Dashboard() {
                         </div>
                         <a
                             href="#"
-                            className="mt-6 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
+                            className="mt-2 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
                         >
-                            View all
+                            More info
+                        </a>
+                    </div>
+
+                    {/* Card 4 */}
+                    <div className="bg-[#1a2534] rounded-xl border border-white/10  shadow-md flex flex-col justify-between">
+                        <div className="flex items-center space-x-4 p-6">
+                            <div className="bg-purple-600 p-3 rounded-lg">
+                                <DollarSign className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-gray-400 text-sm">
+                                    Subscribed Amount
+                                </p>
+                                <div className="flex items-center space-x-2">
+                                    <p className="text-white text-2xl font-semibold">
+                                        40
+                                    </p>
+                                    <span className="text-green-400 text-sm font-medium">
+                                        ↑ 2
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <a
+                            href="#"
+                            className="mt-2 px-6 py-3 bg-[#202b3b] rounded-b-xl text-blue-400 border-t border-white/10 hover:underline text-sm font-medium"
+                        >
+                            More info
                         </a>
                     </div>
                 </div>

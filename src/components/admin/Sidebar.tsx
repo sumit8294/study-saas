@@ -204,7 +204,7 @@ export default function Sidebar() {
                 </div>
 
                 <a
-                    href="/settings"
+                    href="/admin/settings/hero"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <NewspaperIcon className="h-5 w-5 mr-3" />
