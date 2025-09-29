@@ -3,20 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    LayoutDashboard,
-    Info,
-    HelpCircle,
-    Briefcase,
-    Star,
-    Rocket,
-    Eye,
-    DollarSign,
-    Newspaper,
+    Cog,
     Mail,
-    Code,
-    Zap,
-    Asterisk,
-    Hourglass,
+    MessageSquare,
+    CreditCard,
+    Wallet,
+    Shield,
+    UserCog,
 } from "lucide-react";
 
 interface SidebarItem {
@@ -26,49 +19,56 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-    { name: "Hero", href: "/admin/settings/hero", icon: LayoutDashboard },
-    { name: "About Us", href: "/admin/settings/about-us", icon: Info },
-    { name: "Why Us", href: "/admin/settings/why-us", icon: HelpCircle },
     {
-        name: "Business Start",
-        href: "/admin/settings/business-start",
-        icon: Briefcase,
-    },
-    { name: "Features", href: "/admin/settings/features", icon: Asterisk },
-    { name: "Explorers", href: "/admin/settings/explorers", icon: Zap },
-    {
-        name: "All Features",
-        href: "/admin/settings/all-features",
-        icon: Hourglass,
-    },
-    { name: "CTA Area", href: "/admin/settings/cta", icon: Rocket },
-    {
-        name: "Software Overview",
-        href: "/admin/settings/software-overview",
-        icon: Eye,
+        name: "General Settings",
+        href: "/admin/setup/general",
+        icon: Cog,
     },
     {
-        name: "Pricing Plan",
-        href: "/admin/settings/pricing-plan",
-        icon: DollarSign,
+        name: "Mail Configurations",
+        href: "/admin/setup/mail-configuration",
+        icon: Mail,
     },
-    { name: "Testimonial", href: "/admin/settings/testimonial", icon: Star },
-    { name: "Brands", href: "/admin/settings/brands", icon: Newspaper },
-    { name: "Newsletter", href: "/admin/settings/newsletter", icon: Mail },
-    { name: "Custom HTML", href: "/admin/settings/custom-html", icon: Code },
+    {
+        name: "SMS Configurations",
+        href: "/admin/setup/sms-configuration",
+        icon: MessageSquare,
+    },
+    {
+        name: "Currency Settings",
+        href: "/admin/setup/currency",
+        icon: CreditCard,
+    },
+    {
+        name: "Payment Settings",
+        href: "/admin/setup/advanced",
+        icon: Wallet,
+    },
+    {
+        name: "Role & Permissions",
+        href: "/admin/setup/roles",
+        icon: Shield,
+    },
+    {
+        name: "User Management",
+        href: "/admin/setup/user",
+        icon: UserCog,
+    },
 ];
 
-export default function SettingsSidebar() {
+export default function SetupSettingsSidebar() {
     const pathname = usePathname();
 
     return (
         <div className="w-full lg:w-72 bg-[#111827] border border-white/10 rounded-xl shadow-lg p-4">
+            {/* Header */}
             <div className="mb-4 border-b border-gray-800 pb-3">
                 <h2 className="text-lg font-semibold text-white">
-                    Landing Page Settings
+                    Setup Settings
                 </h2>
             </div>
 
+            {/* Sidebar Links */}
             <nav className="space-y-1">
                 {sidebarItems.map((item) => {
                     const isActive = pathname === item.href;

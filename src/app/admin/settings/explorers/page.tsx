@@ -124,14 +124,13 @@ export default function ExplorerElements() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-900 text-gray-200">
+        <div className="flex flex-col lg:flex-row  min-h-screen bg-[#0f172a]">
             {/* Sidebar */}
-            <div className="w-72">
-                <SettingsSidebar />
-            </div>
+
+            <SettingsSidebar />
 
             {/* Main Content */}
-            <div className="flex-1 ml-6 mb-6">
+            <div className="flex-1 mt-6 ml-0 lg:ml-6 lg:mt-0 mb-6">
                 <div className="max-w-6xl mx-auto bg-[#111827] rounded-xl shadow-md border border-gray-800">
                     <div className="flex items-start justify-between p-6 pb-0 border-gray-700">
                         <h2 className="text-xl font-semibold text-white">

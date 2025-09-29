@@ -13,7 +13,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={inter.variable}>
+        <html
+            lang="en"
+            className={inter.variable}
+            style={{ background: "#111827" }}
+        >
             <body className="">{children}</body>
         </html>
     );

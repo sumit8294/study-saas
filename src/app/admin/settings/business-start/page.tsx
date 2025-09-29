@@ -44,15 +44,14 @@ export default function BusinessStartSettingsPage() {
     };
 
     return (
-        <div className="flex min-h-screen bg-[#0f172a]">
+        <div className="flex flex-col lg:flex-row  min-h-screen bg-[#0f172a]">
             {/* Sidebar */}
-            <div className="w-72 border-r border-gray-800">
-                <SettingsSidebar />
-            </div>
+
+            <SettingsSidebar />
 
             {/* Main Content */}
 
-            <div className="bg-[#111827] flex-1 ml-6 rounded-xl shadow-lg border border-white/10 p-6">
+            <div className="bg-[#111827] flex-1 mt-6 ml-0 lg:ml-6 lg:mt-0 mb-6 rounded-xl shadow-lg border border-white/10 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6">
                     Business Start
                 </h2>
@@ -83,7 +82,7 @@ export default function BusinessStartSettingsPage() {
                         <input
                             type="text"
                             name="heroTitle"
-                            placeholder="Acculance SaaS"
+                            placeholder="Apply SaaS"
                             value={formData.title}
                             onChange={handleChange}
                             className="mt-1 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"

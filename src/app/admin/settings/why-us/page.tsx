@@ -62,14 +62,13 @@ export default function WhyUsSettingsPage() {
     );
 
     return (
-        <div className="flex min-h-screen bg-[#0f172a]">
+        <div className="flex flex-col lg:flex-row  min-h-screen bg-[#0f172a]">
             {/* Sidebar */}
-            <div className="w-72 border-r border-gray-800">
-                <SettingsSidebar />
-            </div>
+
+            <SettingsSidebar />
 
             {/* Main Content */}
-            <div className="flex-1 ml-6 mb-6 space-y-8">
+            <div className="bg-[#111827] flex-1 mt-6 ml-0 lg:ml-6 lg:mt-0 mb-6 space-y-8">
                 {/* Form Section */}
                 <div className="bg-[#111827] rounded-xl shadow-lg border border-white/10 p-6">
                     <h2 className="text-xl font-semibold text-white mb-6">
@@ -86,7 +85,7 @@ export default function WhyUsSettingsPage() {
                             <input
                                 type="text"
                                 name="tagline"
-                                placeholder="Why Acculance SaaS?"
+                                placeholder="Why Apply SaaS?"
                                 value={formData.tagline}
                                 onChange={handleChange}
                                 className="mt-1 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -178,7 +177,7 @@ export default function WhyUsSettingsPage() {
                     </div>
 
                     {/* Search Bar */}
-                    <div className="relative mb-4 w-full sm:w-1/3">
+                    <div className="relative mb-4 w-full">
                         <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400 pointer-events-none" />
                         <input
                             type="text"

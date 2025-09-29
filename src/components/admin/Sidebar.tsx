@@ -33,14 +33,20 @@ export default function Sidebar() {
     const [openResources, setOpenResources] = useState(false);
 
     return (
-        <div className="h-screen w-64 min-w-64 bg-[#111827] text-gray-300 flex flex-col border-r border-white/10">
+        <div className="h-screen bg-[#111827] text-gray-300 flex flex-col border-r border-white/10">
             {/* Logo Section */}
-            <div className="flex items-center justify-center h-16">
-                <div className="text-blue-500 text-2xl font-bold">🌊</div>
+            <div className="flex items-center  px-2 py-2 mt-2 justify-center h-16">
+                <div className="text-blue-500 text-2xl font-bold">
+                    <img
+                        src="/site/logo.png"
+                        alt="Apply Logo"
+                        className="w-16"
+                    />{" "}
+                </div>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-2 space-y-2">
+            <nav className="flex-1 px-2 space-y-2 bg-[#111827]">
                 {/* Overview Section */}
                 <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
                     Overview
@@ -212,7 +218,7 @@ export default function Sidebar() {
                 </a>
 
                 <a
-                    href="/pages"
+                    href="/admin/pages"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <DocumentDuplicateIcon className="h-5 w-5 mr-3" />
@@ -220,7 +226,7 @@ export default function Sidebar() {
                 </a>
 
                 <a
-                    href="/newsletters"
+                    href="/admin/newsletters"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <TicketIcon className="h-5 w-5 mr-3" />
@@ -233,7 +239,7 @@ export default function Sidebar() {
                 </div>
 
                 <a
-                    href="/setup/general"
+                    href="/admin/setup/general"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <Cog6ToothIcon className="h-5 w-5 mr-3" />
@@ -241,7 +247,7 @@ export default function Sidebar() {
                 </a>
 
                 <a
-                    href="/activity-log"
+                    href="/admin/activity-log"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <BellIcon className="h-5 w-5 mr-3" />
@@ -249,7 +255,7 @@ export default function Sidebar() {
                 </a>
 
                 <a
-                    href="/application-update"
+                    href="/admin/application-update"
                     className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                 >
                     <CloudArrowUpIcon className="h-5 w-5 mr-3" />
@@ -275,7 +281,7 @@ export default function Sidebar() {
                     {openAccount && (
                         <div className="ml-10 mt-1 space-y-1 text-sm">
                             <a
-                                href="/profile"
+                                href="/admin/profile"
                                 className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                             >
                                 Profile
@@ -309,7 +315,7 @@ export default function Sidebar() {
                     {openResources && (
                         <div className="ml-10 mt-1 space-y-1 text-sm">
                             <a
-                                href="/system-info"
+                                href="/admin/system-info"
                                 target="_blank"
                                 className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                             >
@@ -324,21 +330,21 @@ export default function Sidebar() {
                                 Clear Cache
                             </a>
                             <a
-                                href="/backup"
+                                href="/admin/backup"
                                 className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                             >
                                 <ArrowDownTrayIcon className="inline h-4 w-4 mr-2" />
                                 Database Backup
                             </a>
                             <a
-                                href="https://docs.codeshaper.tech/acculance/"
+                                href="#"
                                 target="_blank"
                                 className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                             >
                                 Documentation
                             </a>
                             <a
-                                href="https://codeshaperbd.freshdesk.com/support/login"
+                                href="#"
                                 target="_blank"
                                 className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
                             >

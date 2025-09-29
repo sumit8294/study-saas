@@ -44,48 +44,32 @@ export default function AboutSettingsPage() {
                     {/* Hero Tagline */}
                     <div>
                         <label className="block text-sm font-medium text-gray-300">
-                            About Us Tagline{" "}
+                            Pricing Plan Tagline{" "}
                             <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="heroTagline"
-                            placeholder="Our Platform, Your Business"
+                            placeholder="Price Tags"
                             value={formData.heroTagline}
                             onChange={handleChange}
-                            className="mt-1 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-2 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 
                     {/* Hero Title */}
                     <div>
                         <label className="block text-sm font-medium text-gray-300">
-                            About Us Title{" "}
+                            Pricing Plan Section Title{" "}
                             <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="heroTitle"
-                            placeholder="Apply SaaS"
+                            placeholder="Pricing Plan"
                             value={formData.heroTitle}
                             onChange={handleChange}
-                            className="mt-1 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        />
-                    </div>
-
-                    {/* Hero Description */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-300">
-                            About Us Description{" "}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                            name="heroDescription"
-                            placeholder="Describe your SaaS platform..."
-                            value={formData.heroDescription}
-                            onChange={handleChange}
-                            rows={3}
-                            className="mt-1 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-2 w-full px-3 py-2 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 

@@ -62,14 +62,12 @@ export default function FeatureSettingsPage() {
     );
 
     return (
-        <div className="flex min-h-screen bg-[#0f172a]">
+        <div className="flex flex-col lg:flex-row  min-h-screen bg-[#0f172a]">
             {/* Sidebar */}
-            <div className="w-72 border-r border-gray-800">
-                <SettingsSidebar />
-            </div>
+            <SettingsSidebar />
 
             {/* Main Content */}
-            <div className="flex-1 ml-6 mb-6 space-y-8">
+            <div className="flex-1 mt-6 ml-0 lg:ml-6 lg:mt-0 mb-6 space-y-8">
                 {/* Form Section */}
                 <div className="bg-[#111827] rounded-xl shadow-lg border border-white/10 p-6">
                     <h2 className="text-xl font-semibold text-white mb-6">

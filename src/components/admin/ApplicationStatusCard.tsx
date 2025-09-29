@@ -16,13 +16,13 @@ const plansData = [
 ];
 
 const clientsData = [
-    { id: 1, name: "John Doe", company: "Codeshaper", subscriptions: 0 },
-    { id: 2, name: "Jane Doe", company: "Codeshaper", subscriptions: 0 },
+    { id: 1, name: "John Doe", company: "Apply", subscriptions: 0 },
+    { id: 2, name: "Jane Doe", company: "Apply", subscriptions: 0 },
 ];
 
 export default function DashboardSection() {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6">
             {/* Top Plans Card */}
             <div className="bg-[#111827] border border-white/10 rounded-xl shadow-lg p-5">
                 <h2 className="text-lg font-semibold text-white mb-4">
