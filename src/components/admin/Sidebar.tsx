@@ -1,13 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
     HomeIcon,
     UsersIcon,
     CurrencyDollarIcon,
-    UserGroupIcon,
     UserIcon,
     TicketIcon,
-    FunnelIcon,
     BuildingLibraryIcon,
     Cog6ToothIcon,
     ArrowLeftIcon,
@@ -23,336 +21,459 @@ import {
     TrashIcon,
     InformationCircleIcon,
     ArrowDownTrayIcon,
+    Bars2Icon,
 } from "@heroicons/react/24/outline";
+import { Menu } from "lucide-react";
 
-export default function Sidebar() {
+interface SidebarProps {
+    isCollapsed: boolean;
+    onToggle: () => void;
+}
+
+export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
     const [openPricing, setOpenPricing] = useState(false);
     const [openSubscription, setOpenSubscription] = useState(false);
     const [openDomain, setOpenDomain] = useState(false);
     const [openAccount, setOpenAccount] = useState(false);
     const [openResources, setOpenResources] = useState(false);
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const navigationItems = {
+        overview: [
+            {
+                name: "Dashboard",
+                href: "/admin",
+                icon: HomeIcon,
+                current: true,
+            },
+            {
+                name: "Go To Landing Page",
+                href: "/",
+                icon: ArrowLeftIcon,
+            },
+        ],
+        saas: [
+            {
+                name: "Pricing",
+                icon: CurrencyDollarIcon,
+                children: [
+                    { name: "Plans", href: "/admin/plans" },
+                    { name: "Plan Features", href: "/admin/features" },
+                ],
+            },
+            {
+                name: "Tenants",
+                href: "/admin/tenants",
+                icon: UsersIcon,
+            },
+            {
+                name: "Subscription",
+                icon: CreditCardIcon,
+                children: [
+                    { name: "All Subscriptions", href: "/admin/subscriptions" },
+                    {
+                        name: "Subscriptions Requests",
+                        href: "/admin/subscriptions/requests",
+                    },
+                ],
+            },
+            {
+                name: "Payments",
+                href: "/admin/payments",
+                icon: CurrencyDollarIcon,
+            },
+            {
+                name: "Domain Management",
+                icon: BuildingLibraryIcon,
+                children: [
+                    { name: "All Domains", href: "/admin/domains" },
+                    {
+                        name: "Domain Requests",
+                        href: "/admin/domains/requests",
+                    },
+                ],
+            },
+            {
+                name: "Promotion",
+                href: "/admin/promotions",
+                icon: GiftIcon,
+            },
+        ],
+        cms: [
+            {
+                name: "Landing Page",
+                href: "/admin/settings/hero",
+                icon: NewspaperIcon,
+            },
+            {
+                name: "Pages",
+                href: "/admin/pages",
+                icon: DocumentDuplicateIcon,
+            },
+            {
+                name: "Subscribers",
+                href: "/admin/newsletters",
+                icon: TicketIcon,
+            },
+        ],
+        others: [
+            {
+                name: "Setup",
+                href: "/admin/setup/general",
+                icon: Cog6ToothIcon,
+            },
+            {
+                name: "Activity Log",
+                href: "/admin/activity-log",
+                icon: BellIcon,
+            },
+            {
+                name: "Update Application",
+                href: "/admin/application-update",
+                icon: CloudArrowUpIcon,
+            },
+            {
+                name: "Account",
+                icon: UserIcon,
+                children: [
+                    { name: "Profile", href: "/admin/profile" },
+                    { name: "Logout", href: "#" },
+                ],
+            },
+            {
+                name: "Resources",
+                icon: BookOpenIcon,
+                children: [
+                    {
+                        name: "System Info",
+                        href: "/admin/system-info",
+                        icon: InformationCircleIcon,
+                    },
+                    {
+                        name: "Clear Cache",
+                        href: "#!",
+                        icon: TrashIcon,
+                    },
+                    {
+                        name: "Database Backup",
+                        href: "/admin/backup",
+                        icon: ArrowDownTrayIcon,
+                    },
+                    { name: "Documentation", href: "#", target: "_blank" },
+                    { name: "Support", href: "#", target: "_blank" },
+                ],
+            },
+        ],
+    };
+
+    const handleMouseEnter = (itemName: string) => {
+        if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+        }
+        setHoveredItem(itemName);
+    };
+
+    const handleMouseLeave = () => {
+        hoverTimeoutRef.current = setTimeout(() => {
+            setHoveredItem(null);
+        }, 150); // Small delay to allow moving to tooltip
+    };
+
+    const handleTooltipMouseEnter = () => {
+        if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+        }
+    };
+
+    const handleTooltipMouseLeave = () => {
+        setHoveredItem(null);
+    };
+
+    const toggleDropdown = (dropdown: string) => {
+        switch (dropdown) {
+            case "pricing":
+                setOpenPricing(!openPricing);
+                break;
+            case "subscription":
+                setOpenSubscription(!openSubscription);
+                break;
+            case "domain":
+                setOpenDomain(!openDomain);
+                break;
+            case "account":
+                setOpenAccount(!openAccount);
+                break;
+            case "resources":
+                setOpenResources(!openResources);
+                break;
+        }
+    };
+
+    const renderMenuSection = (
+        title: string,
+        items: any[],
+        sectionKey: string
+    ) => (
+        <>
+            {!isCollapsed && (
+                <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
+                    {title}
+                </div>
+            )}
+
+            {items.map((item, index) => (
+                <div
+                    key={`${sectionKey}-${index}`}
+                    className="relative"
+                    onMouseEnter={() => handleMouseEnter(item.name)}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    {item.children ? (
+                        // Dropdown item
+                        <div>
+                            <button
+                                onClick={() =>
+                                    toggleDropdown(item.name.toLowerCase())
+                                }
+                                className={`flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937] transition-colors duration-200 ${
+                                    isCollapsed ? "justify-center" : ""
+                                }`}
+                            >
+                                <div
+                                    className={`flex items-center ${
+                                        isCollapsed ? "justify-center" : ""
+                                    }`}
+                                >
+                                    <item.icon className="h-5 w-5" />
+                                    {!isCollapsed && (
+                                        <span className="ml-3">
+                                            {item.name}
+                                        </span>
+                                    )}
+                                </div>
+                                {!isCollapsed &&
+                                    (item.name.toLowerCase() === "pricing" ? (
+                                        openPricing ? (
+                                            <ChevronDownIcon className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        )
+                                    ) : item.name.toLowerCase() ===
+                                      "subscription" ? (
+                                        openSubscription ? (
+                                            <ChevronDownIcon className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        )
+                                    ) : item.name.toLowerCase() ===
+                                      "domain management" ? (
+                                        openDomain ? (
+                                            <ChevronDownIcon className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        )
+                                    ) : item.name.toLowerCase() ===
+                                      "account" ? (
+                                        openAccount ? (
+                                            <ChevronDownIcon className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        )
+                                    ) : item.name.toLowerCase() ===
+                                      "resources" ? (
+                                        openResources ? (
+                                            <ChevronDownIcon className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronRightIcon className="h-4 w-4" />
+                                        )
+                                    ) : null)}
+                            </button>
+
+                            {/* Hover tooltip for collapsed state */}
+                            {isCollapsed && hoveredItem === item.name && (
+                                <div
+                                    className="absolute left-full top-0 ml-1 z-50"
+                                    onMouseEnter={handleTooltipMouseEnter}
+                                    onMouseLeave={handleTooltipMouseLeave}
+                                >
+                                    <div className="bg-[#1F2937] text-white rounded-lg shadow-lg py-1 min-w-48 border border-gray-600">
+                                        <div className="px-3 py-2 font-medium border-b border-gray-600">
+                                            {item.name}
+                                        </div>
+                                        {item.children.map(
+                                            (
+                                                child: any,
+                                                childIndex: number
+                                            ) => (
+                                                <a
+                                                    key={childIndex}
+                                                    href={child.href}
+                                                    target={child.target}
+                                                    className="flex items-center px-3 py-2 text-sm hover:bg-[#374151] transition-colors duration-200"
+                                                    onClick={() =>
+                                                        setHoveredItem(null)
+                                                    }
+                                                >
+                                                    {child.icon && (
+                                                        <child.icon className="h-4 w-4 mr-2" />
+                                                    )}
+                                                    {child.name}
+                                                </a>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Regular dropdown for expanded state */}
+                            {!isCollapsed &&
+                                ((item.name.toLowerCase() === "pricing" &&
+                                    openPricing) ||
+                                    (item.name.toLowerCase() ===
+                                        "subscription" &&
+                                        openSubscription) ||
+                                    (item.name.toLowerCase() ===
+                                        "domain management" &&
+                                        openDomain) ||
+                                    (item.name.toLowerCase() === "account" &&
+                                        openAccount) ||
+                                    (item.name.toLowerCase() === "resources" &&
+                                        openResources)) && (
+                                    <div className="ml-10 mt-1 space-y-1 text-sm">
+                                        {item.children.map(
+                                            (
+                                                child: any,
+                                                childIndex: number
+                                            ) => (
+                                                <a
+                                                    key={childIndex}
+                                                    href={child.href}
+                                                    target={child.target}
+                                                    className="flex items-center hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937] transition-colors duration-200"
+                                                >
+                                                    {child.icon && (
+                                                        <child.icon className="h-4 w-4 mr-2" />
+                                                    )}
+                                                    {child.name}
+                                                </a>
+                                            )
+                                        )}
+                                    </div>
+                                )}
+                        </div>
+                    ) : (
+                        // Regular link item
+                        <a
+                            href={item.href}
+                            className={`flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937] transition-colors duration-200 ${
+                                item.current
+                                    ? "text-white font-medium bg-[#1F2937]"
+                                    : ""
+                            } ${isCollapsed ? "justify-center" : ""}`}
+                        >
+                            <item.icon className="h-5 w-5" />
+                            {!isCollapsed && (
+                                <span className="ml-3">{item.name}</span>
+                            )}
+
+                            {/* Hover tooltip for collapsed state */}
+                            {isCollapsed && hoveredItem === item.name && (
+                                <div
+                                    className="absolute left-full top-1/2 transform -translate-y-1/2 ml-1 z-50"
+                                    onMouseEnter={handleTooltipMouseEnter}
+                                    onMouseLeave={handleTooltipMouseLeave}
+                                >
+                                    <div className="bg-[#1F2937] text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap border border-gray-600">
+                                        {item.name}
+                                    </div>
+                                </div>
+                            )}
+                        </a>
+                    )}
+                </div>
+            ))}
+        </>
+    );
 
     return (
-        <div className="h-screen bg-[#111827] text-gray-300 flex flex-col border-r border-white/10">
+        <div
+            className={`h-screen bg-[#111827] text-gray-300 flex flex-col border-r border-white/10 transition-all duration-300 ${
+                isCollapsed ? "w-16" : "w-64"
+            }`}
+        >
             {/* Logo Section */}
-            <div className="flex items-center  px-2 py-2 mt-2 justify-center h-16">
-                <div className="text-blue-500 text-2xl font-bold">
+            <div className="flex items-center px-2 py-2 mt-2 justify-center h-16">
+                {isCollapsed ? (
+                    <img
+                        src="/site/logo.png"
+                        alt="Apply Logo"
+                        className="w-10"
+                    />
+                ) : (
                     <img
                         src="/site/logo.png"
                         alt="Apply Logo"
                         className="w-16"
-                    />{" "}
-                </div>
+                    />
+                )}
             </div>
 
+            {/* Toggle Button */}
+            {/* Navigation Header with integrated toggle when collapsed */}
+            <div className="relative">
+                {isCollapsed ? (
+                    // When sidebar is collapsed: Toggle button inside nav area
+                    <div className="flex items-center justify-center py-3">
+                        <button
+                            onClick={onToggle}
+                            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-[#1F2937] transition-colors duration-200 group"
+                            onMouseEnter={() => handleMouseEnter("toggle")}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <Menu className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+
+                            {/* Tooltip for toggle button */}
+                            {hoveredItem === "toggle" && (
+                                <div
+                                    className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 z-50"
+                                    onMouseEnter={handleTooltipMouseEnter}
+                                    onMouseLeave={handleTooltipMouseLeave}
+                                >
+                                    <div className="bg-[#1F2937] text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap border border-gray-600">
+                                        Expand Sidebar
+                                    </div>
+                                </div>
+                            )}
+                        </button>
+                    </div>
+                ) : (
+                    // When sidebar is expanded: Regular header with edge toggle button
+                    <div className="px-3 py-2 relative">
+                        {/* Toggle button at right edge */}
+                        <button
+                            onClick={onToggle}
+                            style={{ top: "-41px", right: "-61px" }}
+                            className="absolute -translate-y-1/2 flex items-center justify-center w-12 h-12 bg-[#111827] border border-white/20 rounded-lg hover:bg-[#1F2937] transition-all duration-300 z-50 group"
+                            onMouseEnter={() => handleMouseEnter("toggle")}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <Menu className="h-4 w-4 transition-transform duration-300 group-hover:scale-110 rotate-180" />
+                        </button>
+                    </div>
+                )}
+            </div>
             {/* Navigation */}
             <nav className="flex-1 px-2 space-y-2 bg-[#111827]">
-                {/* Overview Section */}
-                <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
-                    Overview
-                </div>
-
-                {/* Dashboard */}
-                <a
-                    href="/admin"
-                    className="flex items-center w-full px-3 py-2 rounded-lg text-white font-medium bg-[#1F2937]"
-                >
-                    <HomeIcon className="h-5 w-5 mr-3" />
-                    Dashboard
-                </a>
-
-                {/* Landing Page */}
-                <a
-                    href="/"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <ArrowLeftIcon className="h-5 w-5 mr-3" />
-                    Go To Landing Page
-                </a>
-
-                {/* SAAS Section */}
-                <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
-                    SAAS
-                </div>
-
-                {/* Pricing Dropdown */}
-                <div>
-                    <button
-                        onClick={() => setOpenPricing(!openPricing)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                    >
-                        <div className="flex items-center">
-                            <CurrencyDollarIcon className="h-5 w-5 mr-3" />
-                            <span>Pricing</span>
-                        </div>
-                        {openPricing ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                        ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                        )}
-                    </button>
-                    {openPricing && (
-                        <div className="ml-10 mt-1 space-y-1 text-sm">
-                            <a
-                                href="/admin/plans"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Plans
-                            </a>
-                            <a
-                                href="/admin/features"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Plan Features
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-                {/* Tenants */}
-                <a
-                    href="/admin/tenants"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <UsersIcon className="h-5 w-5 mr-3" />
-                    Tenants
-                </a>
-
-                {/* Subscription Dropdown */}
-                <div>
-                    <button
-                        onClick={() => setOpenSubscription(!openSubscription)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                    >
-                        <div className="flex items-center">
-                            <CreditCardIcon className="h-5 w-5 mr-3" />
-                            <span>Subscription</span>
-                        </div>
-                        {openSubscription ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                        ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                        )}
-                    </button>
-                    {openSubscription && (
-                        <div className="ml-10 mt-1 space-y-1 text-sm">
-                            <a
-                                href="/admin/subscriptions"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                All Subscriptions
-                            </a>
-                            <a
-                                href="/admin/subscriptions/requests"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Subscriptions Requests
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-                {/* Payments */}
-                <a
-                    href="/admin/payments"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <CurrencyDollarIcon className="h-5 w-5 mr-3" />
-                    Payments
-                </a>
-
-                {/* Domain Management Dropdown */}
-                <div>
-                    <button
-                        onClick={() => setOpenDomain(!openDomain)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                    >
-                        <div className="flex items-center">
-                            <BuildingLibraryIcon className="h-5 w-5 mr-3" />
-                            <span>Domain Management</span>
-                        </div>
-                        {openDomain ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                        ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                        )}
-                    </button>
-                    {openDomain && (
-                        <div className="ml-10 mt-1 space-y-1 text-sm">
-                            <a
-                                href="/admin/domains"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                All Domains
-                            </a>
-                            <a
-                                href="/admin/domains/requests"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Domain Requests
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-                {/* Promotion */}
-                <a
-                    href="/admin/promotions"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <GiftIcon className="h-5 w-5 mr-3" />
-                    Promotion
-                </a>
-
-                {/* CMS Section */}
-                <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
-                    CMS
-                </div>
-
-                <a
-                    href="/admin/settings/hero"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <NewspaperIcon className="h-5 w-5 mr-3" />
-                    Landing Page
-                </a>
-
-                <a
-                    href="/admin/pages"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <DocumentDuplicateIcon className="h-5 w-5 mr-3" />
-                    Pages
-                </a>
-
-                <a
-                    href="/admin/newsletters"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <TicketIcon className="h-5 w-5 mr-3" />
-                    Subscribers
-                </a>
-
-                {/* Others Section */}
-                <div className="text-gray-400 text-xs uppercase font-bold px-3 mt-3">
-                    Others
-                </div>
-
-                <a
-                    href="/admin/setup/general"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <Cog6ToothIcon className="h-5 w-5 mr-3" />
-                    Setup
-                </a>
-
-                <a
-                    href="/admin/activity-log"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <BellIcon className="h-5 w-5 mr-3" />
-                    Activity Log
-                </a>
-
-                <a
-                    href="/admin/application-update"
-                    className="flex items-center px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                >
-                    <CloudArrowUpIcon className="h-5 w-5 mr-3" />
-                    Update Application
-                </a>
-
-                {/* Account Dropdown */}
-                <div>
-                    <button
-                        onClick={() => setOpenAccount(!openAccount)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                    >
-                        <div className="flex items-center">
-                            <UserIcon className="h-5 w-5 mr-3" />
-                            <span>Account</span>
-                        </div>
-                        {openAccount ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                        ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                        )}
-                    </button>
-                    {openAccount && (
-                        <div className="ml-10 mt-1 space-y-1 text-sm">
-                            <a
-                                href="/admin/profile"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Profile
-                            </a>
-                            <a
-                                href="#"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Logout
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-                {/* Resources Dropdown */}
-                <div>
-                    <button
-                        onClick={() => setOpenResources(!openResources)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                    >
-                        <div className="flex items-center">
-                            <BookOpenIcon className="h-5 w-5 mr-3" />
-                            <span>Resources</span>
-                        </div>
-                        {openResources ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                        ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                        )}
-                    </button>
-                    {openResources && (
-                        <div className="ml-10 mt-1 space-y-1 text-sm">
-                            <a
-                                href="/admin/system-info"
-                                target="_blank"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                <InformationCircleIcon className="inline h-4 w-4 mr-2" />
-                                System Info
-                            </a>
-                            <a
-                                href="#!"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                <TrashIcon className="inline h-4 w-4 mr-2" />
-                                Clear Cache
-                            </a>
-                            <a
-                                href="/admin/backup"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                <ArrowDownTrayIcon className="inline h-4 w-4 mr-2" />
-                                Database Backup
-                            </a>
-                            <a
-                                href="#"
-                                target="_blank"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Documentation
-                            </a>
-                            <a
-                                href="#"
-                                target="_blank"
-                                className="block hover:text-white px-3 py-2 rounded-lg hover:bg-[#1F2937]"
-                            >
-                                Support
-                            </a>
-                        </div>
-                    )}
-                </div>
+                {renderMenuSection(
+                    "Overview",
+                    navigationItems.overview,
+                    "overview"
+                )}
+                {renderMenuSection("SAAS", navigationItems.saas, "saas")}
+                {renderMenuSection("CMS", navigationItems.cms, "cms")}
+                {renderMenuSection("Others", navigationItems.others, "others")}
+                <div className="space h-56"></div>
             </nav>
         </div>
     );

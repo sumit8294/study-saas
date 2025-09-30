@@ -7,7 +7,8 @@
 html,
 body {
     @apply bg-white text-gray-900 antialiased;
-    font-family: InterVariable, system-ui, sans-serif;
+    /* font-family: InterVariable, system-ui, sans-serif; */
+    font-family: "Roboto", sans-serif;
 }
 
 /* *{
