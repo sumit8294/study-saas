@@ -24,7 +24,7 @@ export default function AdminLayout({
         <div className="flex h-screen bg-[#111827]">
             {/* Sidebar */}
             <div
-                className={`fixed relative z-40 transition-all duration-300 ease-in-out ${
+                className={` relative z-40 transition-all duration-300 ease-in-out ${
                     isSidebarOpen
                         ? isSidebarCollapsed
                             ? "translate-x-0 w-16"

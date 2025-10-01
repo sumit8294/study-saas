@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarIcon, SearchIcon, FileDown, FileText } from "lucide-react";
 
 interface Tenant {
@@ -14,57 +13,74 @@ interface Tenant {
     isVerified: boolean;
     isSubscribed: boolean;
     banned: boolean;
+    ownerName?: string;
+    createdAt?: string;
 }
 
 export default function TenantsPage() {
-    const [tenants, setTenants] = useState<Tenant[]>([
-        {
-            id: 1,
-            domain: "example.com",
-            name: "John Doe",
-            email: "john@example.com",
-            plan: "Pro Plan",
-            onTrial: true,
-            isVerified: true,
-            isSubscribed: true,
-            banned: false,
-        },
-        {
-            id: 2,
-            domain: "startup.io",
-            name: "Jane Smith",
-            email: "jane@startup.io",
-            plan: "Basic Plan",
-            onTrial: false,
-            isVerified: true,
-            isSubscribed: false,
-            banned: false,
-        },
-        {
-            id: 3,
-            domain: "enterprise.org",
-            name: "Alex Johnson",
-            email: "alex@enterprise.org",
-            plan: "Enterprise Plan",
-            onTrial: false,
-            isVerified: false,
-            isSubscribed: true,
-            banned: true,
-        },
-    ]);
-
+    const [tenants, setTenants] = useState<Tenant[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    const handleDelete = (id: number) => {
-        setTenants(tenants.filter((tenant) => tenant.id !== id));
+    // Fetch tenants from API
+    const fetchTenants = async (search = "") => {
+        try {
+            setLoading(true);
+            const url = search
+                ? `/api/tenants?search=${encodeURIComponent(search)}`
+                : "/api/tenants";
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch tenants");
+            }
+
+            const data = await response.json();
+            setTenants(data);
+            console.log(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+            console.error("Error fetching tenants:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const filteredTenants = tenants.filter(
-        (tenant) =>
-            tenant.domain.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tenant.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Initial fetch
+    useEffect(() => {
+        fetchTenants();
+    }, []);
+
+    // Handle search with debounce
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            fetchTenants(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [searchTerm]);
+
+    const handleExport = async (type: "pdf" | "csv") => {
+        try {
+            // You can implement export functionality here
+            console.log(`Exporting ${type} for tenants`);
+            // For now, we'll just show an alert
+            alert(`Export ${type} functionality would be implemented here`);
+        } catch (err) {
+            setError(`Failed to export ${type}`);
+        }
+    };
+
+    if (loading && tenants.length === 0) {
+        return (
+            <div className="space-y-6">
+                <div className="flex justify-center items-center py-12">
+                    <div className="text-white">Loading tenants...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -77,54 +93,54 @@ export default function TenantsPage() {
                     <p className="text-gray-400 text-sm">
                         Manage all tenants, their plans, and subscription
                         status.
+                        {tenants.length > 0 && ` (${tenants.length} tenants)`}
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500">
+                    <button
+                        onClick={() => handleExport("pdf")}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500"
+                    >
                         <FileText className="w-4 h-4" />
                         Export PDF
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600">
+                    <button
+                        onClick={() => handleExport("csv")}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+                    >
                         <FileDown className="w-4 h-4" />
                         Export CSV
                     </button>
                 </div>
             </div>
 
+            {/* Error Message */}
+            {error && (
+                <div className="p-4 bg-red-500/10 border border-red-500 rounded-lg">
+                    <p className="text-red-400 text-sm">{error}</p>
+                </div>
+            )}
+
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4 items-center">
                 {/* Search Bar */}
                 <div className="relative w-full md:w-1/3">
-                    <SearchIcon
-                        style={{
-                            position: "absolute",
-                            top: "12px",
-                            left: "4px",
-                        }}
-                        className="absolute left-3 top-[10px] -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-                    />
+                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                     <input
                         type="text"
                         placeholder="Search by domain, name or email"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-6 py-2.5 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
                 </div>
 
                 {/* Date Filter */}
                 <div className="relative w-full md:w-1/4">
-                    <CalendarIcon
-                        style={{
-                            position: "absolute",
-                            top: "12px",
-                            left: "4px",
-                        }}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-                    />
+                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                     <input
                         type="date"
-                        className="w-full px-6 py-2.5 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-[#1F2937] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
                 </div>
             </div>
@@ -155,13 +171,10 @@ export default function TenantsPage() {
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Banned
                             </th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
-                                Actions
-                            </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-700">
-                        {filteredTenants.map((tenant) => (
+                        {tenants.map((tenant) => (
                             <tr
                                 key={tenant.id}
                                 className="hover:bg-[#1F2937] transition"
@@ -239,31 +252,16 @@ export default function TenantsPage() {
                                         {tenant.banned ? "Yes" : "No"}
                                     </span>
                                 </td>
-
-                                {/* Actions */}
-                                <td className="px-6 py-4 whitespace-nowrap text-right space-x-3">
-                                    <a
-                                        href={`/admin/tenants/edit/${tenant.id}`}
-                                    >
-                                        <button className="text-indigo-400 hover:text-indigo-300 font-medium">
-                                            Edit
-                                        </button>
-                                    </a>
-                                    <button
-                                        onClick={() => handleDelete(tenant.id)}
-                                        className="text-red-400 hover:text-red-300 font-medium"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
 
-                {filteredTenants.length === 0 && (
+                {tenants.length === 0 && !loading && (
                     <div className="p-6 text-center text-gray-400">
-                        No tenants found.
+                        {searchTerm
+                            ? "No tenants found matching your search."
+                            : "No tenants found."}
                     </div>
                 )}
             </div>

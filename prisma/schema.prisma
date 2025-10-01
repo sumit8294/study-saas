@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model tech_users {
+  id                    Int            @id @default(autoincrement())
+  uuid                  String         @unique @default(uuid())
+  ios_user_id           String?        @db.VarChar(255)
+  name                  String?        @db.VarChar(255)
+  email                 String?        @unique @db.VarChar(128)
+  device_type           String         @db.VarChar(255)
+  image                 String?        @db.VarChar(255)
+  country_code          String?        @db.VarChar(11)
+  mobile                String?        @db.VarChar(20)
+  otp                   String?        @db.VarChar(128)
+  terms_of_use          Boolean        @default(false)
+  verification_token    String?
+  firebase_device_token String?
+  password              String?        @db.VarChar(255)
+  role                  UserRole
+  register_by           BigInt?
+  employee_code         String?        @db.VarChar(255)
+  is_deleted            Boolean        @default(false)
+  created_at            DateTime       @default(now())
+  updated_at            DateTime       @updatedAt
+  tenants               tech_tenants[]
+
+  @@index([ios_user_id])
+  @@index([mobile])
+}
+
+model tech_tenants {
+  id         Int        @id @default(autoincrement())
+  domain     String     @unique
+  name       String
+  email      String     @unique
+  planId     Int
+  ownerId    Int
+  onTrial    Boolean    @default(true)
+  verified   Boolean    @default(false)
+  subscribed Boolean    @default(false)
+  banned     Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  isDeleted  Boolean    @default(false)
+  owner      tech_users @relation(fields: [ownerId], references: [id])
+  plan       tech_plans @relation(fields: [planId], references: [id])
+}
+
+model tech_plan_features {
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  isDeleted Boolean      @default(false)
+  plans     tech_plans[] @relation("PlanFeatures")
+}
+
+model tech_plans {
+  id              Int                  @id @default(autoincrement())
+  name            String               @unique
+  amount          Float
+  description     String?
+  limitClients    Int
+  limitSuppliers  Int
+  limitEmployees  Int
+  limitDomains    Int
+  limitInvoices   Int
+  limitPurchases  Int
+  image           String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  isDeleted       Boolean              @default(false)
+  tenants         tech_tenants[]
+  pricingFeatures tech_plan_features[] @relation("PlanFeatures")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  SUB_ADMIN
+  EMPLOYEE
+  STUDENT
+  AGENT
+}
