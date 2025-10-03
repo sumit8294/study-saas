@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedPlans(features: any[]) {
+export async function seedPlans(prisma: PrismaClient, features: any[]) {
     const basicPlan = await prisma.tech_plans.upsert({
         where: { name: "Basic Plan" },
         update: {},

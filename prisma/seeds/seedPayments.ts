@@ -1,8 +1,6 @@
 import { PrismaClient, PaymentStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedPayments() {
+export async function seedPayments(prisma: PrismaClient) {
     console.log("Seeding payments...");
 
     // Get some tenants and plans to associate with payments

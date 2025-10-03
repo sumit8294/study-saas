@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedDomains() {
+export async function seedDomains(prisma: PrismaClient) {
     console.log("Seeding domains...");
 
     // Get some tenants to associate with domains

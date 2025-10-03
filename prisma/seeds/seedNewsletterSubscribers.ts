@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedNewsletterSubscribers() {
+export async function seedNewsletterSubscribers(prisma: PrismaClient) {
     console.log("Seeding newsletter subscribers...");
 
     const subscribersData = [

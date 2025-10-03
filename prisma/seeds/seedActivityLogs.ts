@@ -6,9 +6,8 @@ import {
     LogStatus,
     UserRole,
 } from "@prisma/client";
-const prisma = new PrismaClient();
 
-export async function seedActivityLogs() {
+export async function seedActivityLogs(prisma: PrismaClient) {
     console.log("Seeding activity logs...");
 
     try {

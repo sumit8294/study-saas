@@ -1,8 +1,6 @@
 import { PrismaClient, PageType, PageStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedPages() {
+export async function seedPages(prisma: PrismaClient) {
     console.log("Seeding pages...");
 
     // Get an admin user to set as author

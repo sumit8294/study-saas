@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedTenants(users: any, plans: any) {
+export async function seedTenants(
+    prisma: PrismaClient,
+    users: any,
+    plans: any
+) {
     await prisma.tech_tenants.upsert({
         where: { domain: "mybiz.com" },
         update: {},

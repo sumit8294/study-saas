@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedPlanFeatures() {
+export async function seedPlanFeatures(prisma: PrismaClient) {
     const features = ["Custom Domain", "Advanced Analytics", "24/7 Support"];
     const created = [];
 

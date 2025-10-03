@@ -2,9 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
-
-export async function seedUsers() {
+export async function seedUsers(prisma: PrismaClient) {
     const plainPassword = "Password123"; // Default password for all seeded users
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 

@@ -32,7 +32,7 @@ model tech_users {
   updated_at            DateTime       @updatedAt
 
   // Relations
-  roleRelation   Role?                           @relation(fields: [roleId], references: [id])
+  roleRelation   tech_roles?                           @relation(fields: [roleId], references: [id])
   tenants               tech_tenants[]
   reviewed_subscription_requests tech_subscription_requests[]  
   approved_subscriptions tech_subscriptions[]   
@@ -90,7 +90,7 @@ model tech_plans {
   limitSuppliers  Int
   limitEmployees  Int
   limitDomains    Int
-  limitInvoices   Int
+  limitInvoices    Int
   limitPurchases  Int
   image           String?
   createdAt       DateTime             @default(now())
@@ -343,7 +343,7 @@ model tech_website_sections {
   @@index([status])
   @@index([show_on_landing])
   @@index([order_index])
-  @@map("website_sections")
+  @@map("tech_website_sections")
 }
 
 // ==================== CHILD ELEMENT MODELS ====================
@@ -367,7 +367,7 @@ model tech_feature_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("feature_elements")
+  @@map("tech_feature_elements")
 }
 
 // For Why Us section table
@@ -389,7 +389,7 @@ model tech_why_us_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("why_us_elements")
+  @@map("tech_why_us_elements")
 }
 
 // For Explorers section table
@@ -411,7 +411,7 @@ model tech_explorer_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("explorer_elements")
+  @@map("tech_explorer_elements")
 }
 
 // For All Features section table
@@ -433,7 +433,7 @@ model tech_all_feature_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("all_feature_elements")
+  @@map("tech_all_feature_elements")
 }
 
 // For Software Overview section table
@@ -455,7 +455,7 @@ model tech_software_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("software_elements")
+  @@map("tech_software_elements")
 }
 
 // For Testimonial section table
@@ -480,7 +480,7 @@ model tech_testimonial_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("testimonial_elements")
+  @@map("tech_testimonial_elements")
 }
 
 // For Brands section table
@@ -502,7 +502,7 @@ model tech_brand_elements {
   @@index([section_id])
   @@index([status])
   @@index([order_index])
-  @@map("brand_elements")
+  @@map("tech_brand_elements")
 }
 
 // ==================== ACTIVITY LOGS ====================
@@ -538,11 +538,11 @@ model tech_activity_logs {
   @@index([entity_id])
   @@index([severity])
   @@index([created_at])
-  @@map("activity_logs")
+  @@map("tech_activity_logs")
 }
 
 // General Settings Schema
-model GeneralSettings {
+model tech_general_settings {
   id                  String   @id @default(cuid())
   
   // Company Information
@@ -579,11 +579,11 @@ model GeneralSettings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("general_settings")
+  @@map("tech_general_settings")
 }
 
 // Mail Configuration Schema
-model MailConfiguration {
+model tech_mail_configurations {
   id                String   @id @default(cuid())
   
   // Mail Settings
@@ -600,11 +600,11 @@ model MailConfiguration {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("mail_configurations")
+  @@map("tech_mail_configurations")
 }
 
 // SMS Configuration Schema (Provider-agnostic)
-model SmsConfiguration {
+model tech_sms_configurations {
   id                    String   @id @default(cuid())
   
   // Provider Settings
@@ -618,11 +618,11 @@ model SmsConfiguration {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("sms_configurations")
+  @@map("tech_sms_configurations")
 }
 
 // Currency Schema
-model Currency {
+model tech_currencies {
   id          String   @id @default(cuid())
   name        String   // Currency name (e.g., US Dollar)
   code        String   // Currency code (e.g., USD)
@@ -637,11 +637,11 @@ model Currency {
   updatedAt DateTime @updatedAt
 
   @@unique([code])
-  @@map("currencies")
+  @@map("tech_currencies")
 }
 
 // Payment Settings Schema
-model PaymentSettings {
+model tech_payment_settings {
   id                      String   @id @default(cuid())
   
   // Manual Payment
@@ -666,48 +666,46 @@ model PaymentSettings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("payment_settings")
+  @@map("tech_payment_settings")
 }
 
-
 // Role & Permissions Schema - Explicit Junction Table
-model Role {
+model tech_roles {
   id          String           @id @default(cuid())
   name        String           @unique
   description String?
   isSystem    Boolean          @default(false)
-  permissions RolePermission[] // Relation to junction table
+  permissions tech_role_permissions[] // Relation to junction table
   users       tech_users[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  @@map("roles")
+  @@map("tech_roles")
 }
 
-model Permission {
+model tech_permissions {
   id          String           @id @default(cuid())
   name        String           @unique
   category    String
   description String?
-  roles       RolePermission[] // Relation to junction table
+  roles       tech_role_permissions[] // Relation to junction table
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  @@map("permissions")
+  @@map("tech_permissions")
 }
 
-model RolePermission {
+model tech_role_permissions {
   id           String     @id @default(cuid())
   roleId       String
   permissionId String
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         tech_roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   tech_permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now())
 
   @@unique([roleId, permissionId])
-  @@map("role_permissions")
+  @@map("tech_role_permissions")
 }
-
 
 // ==================== ENUMS ====================
 enum LogAction {
@@ -855,12 +853,11 @@ enum PaymentStatus {
   CANCELLED
 }
 
-  enum UserRole {
-    SUPER_ADMIN
-    ADMIN
-    SUB_ADMIN
-    EMPLOYEE
-    STUDENT
-    AGENT
-  }
-
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  SUB_ADMIN
+  EMPLOYEE
+  STUDENT
+  AGENT
+}

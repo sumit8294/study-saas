@@ -4,14 +4,14 @@ export async function seedCurrencies(prisma: PrismaClient) {
     console.log("Seeding currencies...");
 
     // Check if currencies already exist
-    const existingCurrencies = await prisma.currency.findMany();
+    const existingCurrencies = await prisma.tech_currencies.findMany();
 
     if (existingCurrencies.length > 0) {
         console.log("Currencies already exist, skipping...");
         return existingCurrencies;
     }
 
-    const currencies = await prisma.currency.createMany({
+    const currencies = await prisma.tech_currencies.createMany({
         data: [
             {
                 name: "US Dollar",

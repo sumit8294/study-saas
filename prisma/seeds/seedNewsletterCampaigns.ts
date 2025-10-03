@@ -1,8 +1,6 @@
 import { PrismaClient, CampaignStatus, CampaignAudience } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedNewsletterCampaigns() {
+export async function seedNewsletterCampaigns(prisma: PrismaClient) {
     console.log("Seeding newsletter campaigns...");
 
     // Get admin users and subscribers

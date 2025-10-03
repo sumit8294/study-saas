@@ -4,14 +4,14 @@ export async function seedPaymentSettings(prisma: PrismaClient) {
     console.log("Seeding payment settings...");
 
     // Check if payment settings already exist
-    const existingSettings = await prisma.paymentSettings.findFirst();
+    const existingSettings = await prisma.tech_payment_settings.findFirst();
 
     if (existingSettings) {
         console.log("Payment settings already exist, skipping...");
         return existingSettings;
     }
 
-    const paymentSettings = await prisma.paymentSettings.create({
+    const paymentSettings = await prisma.tech_payment_settings.create({
         data: {
             manualPayment: {
                 isActive: true,

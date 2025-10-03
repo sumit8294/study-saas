@@ -121,7 +121,7 @@ export async function seedPermissions(prisma: PrismaClient) {
     ];
 
     for (const permissionData of permissions) {
-        await prisma.permission.upsert({
+        await prisma.tech_permissions.upsert({
             where: { name: permissionData.name },
             update: permissionData,
             create: permissionData,

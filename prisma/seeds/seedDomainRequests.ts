@@ -1,8 +1,6 @@
 import { PrismaClient, DomainRequestStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedDomainRequests() {
+export async function seedDomainRequests(prisma: PrismaClient) {
     console.log("Seeding domain requests...");
 
     // Get some tenants to associate with domain requests

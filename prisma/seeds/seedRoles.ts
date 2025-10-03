@@ -39,7 +39,7 @@ export async function seedRoles(prisma: PrismaClient) {
 
     const createdRoles = [];
     for (const roleData of roles) {
-        const role = await prisma.role.upsert({
+        const role = await prisma.tech_roles.upsert({
             where: { name: roleData.name },
             update: roleData,
             create: roleData,

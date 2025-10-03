@@ -4,14 +4,14 @@ export async function seedGeneralSettings(prisma: PrismaClient) {
     console.log("Seeding general settings...");
 
     // Check if general settings already exist
-    const existingSettings = await prisma.generalSettings.findFirst();
+    const existingSettings = await prisma.tech_general_settings.findFirst();
 
     if (existingSettings) {
         console.log("General settings already exist, skipping...");
         return existingSettings;
     }
 
-    const generalSettings = await prisma.generalSettings.create({
+    const generalSettings = await prisma.tech_general_settings.create({
         data: {
             // Company Information
             companyName: "Study Abroad SaaS",

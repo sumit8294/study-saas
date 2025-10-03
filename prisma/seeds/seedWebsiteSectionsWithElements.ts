@@ -1,8 +1,6 @@
 import { PrismaClient, SectionStatus, ElementStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedWebsiteSectionsWithElements() {
+export async function seedWebsiteSectionsWithElements(prisma: PrismaClient) {
     console.log("Seeding website sections with elements...");
 
     try {
@@ -148,25 +146,25 @@ export async function seedWebsiteSectionsWithElements() {
                 // Seed elements based on section type
                 switch (sectionData.section_key) {
                     case "features":
-                        await seedFeatureElements(section.id);
+                        await seedFeatureElements(prisma, section.id);
                         break;
                     case "why_us":
-                        await seedWhyUsElements(section.id);
+                        await seedWhyUsElements(prisma, section.id);
                         break;
                     case "explorers":
-                        await seedExplorerElements(section.id);
+                        await seedExplorerElements(prisma, section.id);
                         break;
                     case "all_features":
-                        await seedAllFeatureElements(section.id);
+                        await seedAllFeatureElements(prisma, section.id);
                         break;
                     case "software_overview":
-                        await seedSoftwareElements(section.id);
+                        await seedSoftwareElements(prisma, section.id);
                         break;
                     case "testimonial":
-                        await seedTestimonialElements(section.id);
+                        await seedTestimonialElements(prisma, section.id);
                         break;
                     case "brands":
-                        await seedBrandElements(section.id);
+                        await seedBrandElements(prisma, section.id);
                         break;
                 }
             } catch (error) {
@@ -188,7 +186,7 @@ export async function seedWebsiteSectionsWithElements() {
 }
 
 // Helper functions to seed elements for each section type
-async function seedFeatureElements(sectionId: number) {
+async function seedFeatureElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             title: "Easy POS",
@@ -232,7 +230,7 @@ async function seedFeatureElements(sectionId: number) {
     console.log("✅ Feature elements seeded");
 }
 
-async function seedWhyUsElements(sectionId: number) {
+async function seedWhyUsElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             title: "Multitenancy",
@@ -276,7 +274,7 @@ async function seedWhyUsElements(sectionId: number) {
     console.log("✅ Why Us elements seeded");
 }
 
-async function seedExplorerElements(sectionId: number) {
+async function seedExplorerElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             title: "Automate Your Business",
@@ -312,7 +310,7 @@ async function seedExplorerElements(sectionId: number) {
     console.log("✅ Explorer elements seeded");
 }
 
-async function seedAllFeatureElements(sectionId: number) {
+async function seedAllFeatureElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             title: "Customer Management",
@@ -346,7 +344,7 @@ async function seedAllFeatureElements(sectionId: number) {
     console.log("✅ All Features elements seeded");
 }
 
-async function seedSoftwareElements(sectionId: number) {
+async function seedSoftwareElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             title: "Dashboard Overview",
@@ -386,7 +384,10 @@ async function seedSoftwareElements(sectionId: number) {
     console.log("✅ Software elements seeded");
 }
 
-async function seedTestimonialElements(sectionId: number) {
+async function seedTestimonialElements(
+    prisma: PrismaClient,
+    sectionId: number
+) {
     const elements = [
         {
             name: "Sarah Johnson",
@@ -431,7 +432,7 @@ async function seedTestimonialElements(sectionId: number) {
     console.log("✅ Testimonial elements seeded");
 }
 
-async function seedBrandElements(sectionId: number) {
+async function seedBrandElements(prisma: PrismaClient, sectionId: number) {
     const elements = [
         {
             name: "TechCorp Inc.",

@@ -1,8 +1,6 @@
 import { PrismaClient, SubscriptionRequestStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-export async function seedSubscriptionRequests() {
+export async function seedSubscriptionRequests(prisma: PrismaClient) {
     console.log("Seeding subscription requests...");
 
     try {
