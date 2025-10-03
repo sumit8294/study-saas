@@ -23,16 +23,28 @@ model tech_users {
   verification_token    String?
   firebase_device_token String?
   password              String?        @db.VarChar(255)
-  role                  UserRole
+  role                  UserRole       // Keep for backward compatibility
+  roleId                String?        // Reference to Role table
   register_by           BigInt?
   employee_code         String?        @db.VarChar(255)
   is_deleted            Boolean        @default(false)
   created_at            DateTime       @default(now())
   updated_at            DateTime       @updatedAt
+
+  // Relations
+  roleRelation   Role?                           @relation(fields: [roleId], references: [id])
   tenants               tech_tenants[]
+  reviewed_subscription_requests tech_subscription_requests[]  
+  approved_subscriptions tech_subscriptions[]   
+  newsletter_campaigns tech_newsletter_campaigns[]  
+  pages tech_pages[]    
+  created_website_sections tech_website_sections[] @relation("SectionCreatedBy")
+  updated_website_sections tech_website_sections[] @relation("SectionUpdatedBy") 
+  activities tech_activity_logs[]        
 
   @@index([ios_user_id])
   @@index([mobile])
+  @@index([roleId])
 }
 
 model tech_tenants {
@@ -49,8 +61,15 @@ model tech_tenants {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   isDeleted  Boolean    @default(false)
+  
+  
   owner      tech_users @relation(fields: [ownerId], references: [id])
   plan       tech_plans @relation(fields: [planId], references: [id])
+  payments    tech_payments[]
+  domain_requests tech_domain_requests[]
+  domains tech_domains[]
+  subscription_requests tech_subscription_requests[]  
+  subscriptions tech_subscriptions[]   
 }
 
 model tech_plan_features {
@@ -77,15 +96,771 @@ model tech_plans {
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
   isDeleted       Boolean              @default(false)
+  
   tenants         tech_tenants[]
   pricingFeatures tech_plan_features[] @relation("PlanFeatures")
+  payments        tech_payments[]
+  subscription_requests tech_subscription_requests[]  
+  subscriptions tech_subscriptions[]  
 }
 
-enum UserRole {
-  SUPER_ADMIN
-  ADMIN
-  SUB_ADMIN
-  EMPLOYEE
-  STUDENT
-  AGENT
+model tech_payments {
+  id               Int           @id @default(autoincrement())
+  uuid             String        @unique @default(uuid())
+  tenantId         Int
+  planId           Int
+  month            String       // e.g., "September 2025"
+  transactionType  String        // e.g., "Credit Card", "PayPal", "Bank Transfer"
+  trxId            String        @unique // e.g., "TRX123456"
+  amount           Float
+  paymentStatus    PaymentStatus
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  isDeleted        Boolean       @default(false)
+
+  tenant tech_tenants @relation(fields: [tenantId], references: [id])
+  plan   tech_plans   @relation(fields: [planId], references: [id])
+
+  @@index([trxId])
+  @@index([paymentStatus])
+  @@index([createdAt])
 }
+
+model tech_domain_requests {
+  id          Int                 @id @default(autoincrement())
+  uuid        String              @unique @default(uuid())
+  domain      String              @unique
+  status      DomainRequestStatus @default(PENDING)
+  tenantId    Int
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  isDeleted   Boolean             @default(false)
+
+  tenant tech_tenants? @relation(fields: [tenantId], references: [id])
+
+  @@index([domain])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model tech_domains {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  domain      String   @unique
+  tenantId    Int
+  isActive    Boolean  @default(true)
+  isPrimary   Boolean  @default(false)
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isDeleted   Boolean  @default(false)
+
+  tenant tech_tenants @relation(fields: [tenantId], references: [id])
+
+  @@index([domain])
+  @@index([isActive])
+  @@index([createdAt])
+}
+
+model tech_subscription_requests {
+  id            Int                      @id @default(autoincrement())
+  uuid          String                   @unique @default(uuid())
+  tenantId      Int
+  planId        Int
+  transactionId String?                  @unique // Transaction ID from payment
+  documentPath  String?                  // Path to uploaded document
+  month         String                   // e.g., "September 2025"
+  status        SubscriptionRequestStatus @default(PENDING)
+  requestedAt   DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  reviewedBy    Int?                     // Admin who reviewed the request
+  reviewedAt    DateTime?                // When reviewed
+  adminNotes    String?                  // Admin comments/notes
+  isDeleted     Boolean                  @default(false)
+
+  tenant        tech_tenants @relation(fields: [tenantId], references: [id])
+  plan          tech_plans   @relation(fields: [planId], references: [id])
+  reviewedByUser tech_users? @relation(fields: [reviewedBy], references: [id])
+
+  @@index([transactionId])
+  @@index([status])
+  @@index([requestedAt])
+  @@index([month])
+}
+
+model tech_subscriptions {
+  id           Int        @id @default(autoincrement())
+  uuid         String     @unique @default(uuid())
+  tenantId     Int
+  planId       Int
+  month        String     // e.g., "September 2025"
+  approvedBy   Int?       // Admin who approved the subscription
+  startsAt     DateTime   @default(now())
+  endsAt       DateTime   // Subscription end date
+  status       SubscriptionStatus @default(ACTIVE)
+  autoRenew    Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  isDeleted    Boolean    @default(false)
+
+  tenant       tech_tenants @relation(fields: [tenantId], references: [id])
+  plan         tech_plans   @relation(fields: [planId], references: [id])
+  approvedByUser tech_users? @relation(fields: [approvedBy], references: [id])
+
+  @@index([month])
+  @@index([status])
+  @@index([startsAt])
+  @@index([endsAt])
+  @@unique([tenantId, month]) // One subscription per tenant per month
+}
+
+model tech_newsletter_subscribers {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  email        String   @unique @db.VarChar(255)
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+  unsubscribedAt DateTime?
+  source       String?  @db.VarChar(100) // How they subscribed (website, form, etc.)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isDeleted    Boolean  @default(false)
+
+   campaign_recipients tech_campaign_recipients[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([subscribedAt])
+}
+
+model tech_newsletter_campaigns {
+  id          Int                    @id @default(autoincrement())
+  uuid        String                 @unique @default(uuid())
+  subject     String                 @db.VarChar(255)
+  sentTo      CampaignAudience       @default(ALL_SUBSCRIBERS)
+  greeting    String                 @db.VarChar(255)
+  body        String                 @db.Text
+  status      CampaignStatus         @default(DRAFT)
+  sentBy      Int?                   // Admin user who sent the campaign
+  sentAt      DateTime?              // When campaign was actually sent
+  scheduledAt DateTime?              // For scheduled campaigns
+  recipientCount Int?                // How many recipients
+  openCount   Int                    @default(0) // How many opened
+  clickCount  Int                    @default(0) // How many clicked links
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  isDeleted   Boolean                @default(false)
+
+  sentByUser tech_users? @relation(fields: [sentBy], references: [id])
+  recipients tech_campaign_recipients[]
+
+  @@index([status])
+  @@index([sentAt])
+  @@index([scheduledAt])
+  @@index([createdAt])
+}
+
+model tech_campaign_recipients {
+  id          Int                @id @default(autoincrement())
+  uuid        String             @unique @default(uuid())
+  campaignId  Int
+  subscriberId Int?
+  email       String             @db.VarChar(255)
+  status      DeliveryStatus     @default(PENDING)
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  bounceReason String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  isDeleted   Boolean            @default(false)
+
+  campaign   tech_newsletter_campaigns @relation(fields: [campaignId], references: [id])
+  subscriber tech_newsletter_subscribers? @relation(fields: [subscriberId], references: [id])
+
+  @@index([campaignId])
+  @@index([subscriberId])
+  @@index([email])
+  @@index([status])
+  @@unique([campaignId, email])
+}
+
+model tech_pages {
+  id          Int         @id @default(autoincrement())
+  uuid        String      @unique @default(uuid())
+  title       String      @db.VarChar(255)
+  slug        String      @unique @db.VarChar(255)
+  content     String      @db.Text
+  type        PageType    @default(INFORMATION)
+  status      PageStatus  @default(ACTIVE)
+  metaTitle   String?     @db.VarChar(255)
+  metaDescription String? @db.VarChar(500)
+  metaKeywords String?    @db.VarChar(500)
+  featuredImage String?   // URL for featured image
+  authorId    Int?        // User who created the page
+  publishedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isDeleted   Boolean     @default(false)
+
+  author tech_users? @relation(fields: [authorId], references: [id])
+
+  @@index([slug])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ==================== WEBSITE SECTIONS ====================
+model tech_website_sections {
+  id           Int            @id @default(autoincrement())
+  uuid         String         @unique @default(uuid())
+  section_key  String         @unique
+  section_name String
+  content      Json           // Main section content (tagline, title, description, etc.)
+  show_on_landing Boolean     @default(true)
+  status       SectionStatus  @default(ACTIVE)
+  order_index  Int            @default(0)
+  version      Int            @default(1)
+  created_by   Int?
+  updated_by   Int?
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  is_deleted   Boolean        @default(false)
+
+  // Relations to child elements
+  feature_elements     tech_feature_elements[]
+  why_us_elements      tech_why_us_elements[]
+  explorer_elements    tech_explorer_elements[]
+  all_feature_elements tech_all_feature_elements[]
+  software_elements    tech_software_elements[]
+  testimonial_elements tech_testimonial_elements[]
+  brand_elements       tech_brand_elements[]
+
+  created_by_user tech_users? @relation("SectionCreatedBy", fields: [created_by], references: [id])
+  updated_by_user tech_users? @relation("SectionUpdatedBy", fields: [updated_by], references: [id])
+
+  @@index([section_key])
+  @@index([status])
+  @@index([show_on_landing])
+  @@index([order_index])
+  @@map("website_sections")
+}
+
+// ==================== CHILD ELEMENT MODELS ====================
+
+// For Features section table
+model tech_feature_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  title       String
+  description String?
+  image       String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("feature_elements")
+}
+
+// For Why Us section table
+model tech_why_us_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  title       String
+  description String?
+  image       String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("why_us_elements")
+}
+
+// For Explorers section table
+model tech_explorer_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  title       String
+  description String?
+  image       String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("explorer_elements")
+}
+
+// For All Features section table
+model tech_all_feature_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  title       String
+  description String?
+  image       String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("all_feature_elements")
+}
+
+// For Software Overview section table
+model tech_software_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  title       String?
+  description String?
+  image       String
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("software_elements")
+}
+
+// For Testimonial section table
+model tech_testimonial_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  name        String
+  title       String?
+  description String
+  image       String?
+  rating      Int?     // 1-5 stars
+  company     String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("testimonial_elements")
+}
+
+// For Brands section table
+model tech_brand_elements {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  section_id  Int
+  name        String
+  image       String
+  website_url String?
+  status      ElementStatus @default(ACTIVE)
+  order_index Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
+
+  section tech_website_sections @relation(fields: [section_id], references: [id])
+
+  @@index([section_id])
+  @@index([status])
+  @@index([order_index])
+  @@map("brand_elements")
+}
+
+// ==================== ACTIVITY LOGS ====================
+model tech_activity_logs {
+  id          Int           @id @default(autoincrement())
+  uuid        String        @unique @default(uuid())
+  user_id     Int?          // User who performed the action
+  user_name   String?       // Cached user name for performance
+  user_email  String?       // Cached user email
+  user_role   UserRole?     // Cached user role
+  action      LogAction     // Type of action performed
+  entity_type EntityType    // What entity was affected (user, tenant, plan, etc.)
+  entity_id   Int?          // ID of the affected entity
+  entity_name String?       // Name of the affected entity
+  description String        // Human-readable description
+  old_values  Json?         // Previous values (for updates)
+  new_values  Json?         // New values (for updates)
+  ip_address  String?       // IP address of the user
+  user_agent  String?       // Browser/user agent info
+  location    String?       // Geographic location (if available)
+  severity    LogSeverity   @default(INFO)
+  status      LogStatus     @default(SUCCESS)
+  metadata    Json?         // Additional context data
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  is_deleted  Boolean       @default(false)
+
+  user tech_users? @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@index([action])
+  @@index([entity_type])
+  @@index([entity_id])
+  @@index([severity])
+  @@index([created_at])
+  @@map("activity_logs")
+}
+
+// General Settings Schema
+model GeneralSettings {
+  id                  String   @id @default(cuid())
+  
+  // Company Information
+  companyName         String
+  companyTagline      String
+  emailAddress        String
+  phoneNumber         String
+  address             String?
+  
+  // Pricing Plan
+  yearlyPlanDiscount  Float?   // Yearly plan discount percentage
+  trialDayCount       Int      // Trial day count
+  
+  // Default Elements
+  defaultLanguage     String   @default("en")
+  defaultCurrency     String   @default("USD")
+  copyrightText       String
+  
+  // Social Media Links
+  facebookLink        String?
+  instagramLink       String?
+  twitterLink         String?
+  linkedinLink        String?
+  
+  // Logo URLs
+  whiteLogo           String?
+  blackLogo           String?
+  smallLogo           String?
+  favicon             String?
+  
+  // Features
+  emailOtpVerification Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("general_settings")
+}
+
+// Mail Configuration Schema
+model MailConfiguration {
+  id                String   @id @default(cuid())
+  
+  // Mail Settings
+  mailer            String   // smtp, sendmail, etc.
+  host              String   // smtp.gmail.com, etc.
+  port              String   // 587, 465, etc.
+  username          String   // email username
+  password          String   // email password
+  encryption        String   // tls, ssl, etc.
+  fromAddress       String   // sender email address
+  fromName          String?  // sender name (optional)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mail_configurations")
+}
+
+// SMS Configuration Schema (Provider-agnostic)
+model SmsConfiguration {
+  id                    String   @id @default(cuid())
+  
+  // Provider Settings
+  provider              String   @default("twilio") // twilio, vonage, etc.
+  accountSid            String   // ACCOUNT SID
+  authToken             String   // AUTH TOKEN
+  fromNumber            String   // FROM NUMBER
+  serviceSid            String   // SMS SERVICE SID
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sms_configurations")
+}
+
+// Currency Schema
+model Currency {
+  id          String   @id @default(cuid())
+  name        String   // Currency name (e.g., US Dollar)
+  code        String   // Currency code (e.g., USD)
+  rate        Float    // Exchange rate compared to USD
+  symbol      String   // Currency symbol (e.g., $)
+  position    String   @default("left") // left or right
+  status      Boolean  @default(true)   // Active/Inactive
+  note        String?  // Optional note
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([code])
+  @@map("currencies")
+}
+
+// Payment Settings Schema
+model PaymentSettings {
+  id                      String   @id @default(cuid())
+  
+  // Manual Payment
+  manualPayment           Json?    // { isActive: boolean, note: string }
+  
+  // Stripe
+  stripe                  Json?    // { isActive: boolean, secret: string }
+  
+  // PayPal
+  paypal                  Json?    // { isActive: boolean, mode: string, clientId: string, clientSecret: string }
+  
+  // Paystack
+  paystack                Json?    // { isActive: boolean, merchantEmail: string, publicKey: string, secretKey: string }
+  
+  // Razorpay
+  razorpay                Json?    // { isActive: boolean, keyId: string, keySecret: string }
+  
+  // Live Currency Exchange
+  currencyExchange        Json?    // { isActive: boolean, apiKey: string }
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment_settings")
+}
+
+
+// Role & Permissions Schema - Explicit Junction Table
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  description String?
+  isSystem    Boolean          @default(false)
+  permissions RolePermission[] // Relation to junction table
+  users       tech_users[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  category    String
+  description String?
+  roles       RolePermission[] // Relation to junction table
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+
+// ==================== ENUMS ====================
+enum LogAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  EXPORT
+  IMPORT
+  BACKUP
+  RESTORE
+  APPROVE
+  REJECT
+  SUSPEND
+  ACTIVATE
+  RESET_PASSWORD
+  CHANGE_ROLE
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  SUBSCRIPTION_CREATED
+  SUBSCRIPTION_EXPIRED
+  DOMAIN_CONNECTED
+  DOMAIN_REJECTED
+}
+
+enum EntityType {
+  USER
+  TENANT
+  PLAN
+  PAYMENT
+  DOMAIN_REQUEST
+  DOMAIN
+  SUBSCRIPTION_REQUEST
+  SUBSCRIPTION
+  NEWSLETTER_SUBSCRIBER
+  NEWSLETTER_CAMPAIGN
+  PAGE
+  WEBSITE_SECTION
+  FEATURE_ELEMENT
+  WHY_US_ELEMENT
+  EXPLORER_ELEMENT
+  ALL_FEATURE_ELEMENT
+  SOFTWARE_ELEMENT
+  TESTIMONIAL_ELEMENT
+  BRAND_ELEMENT
+  SYSTEM
+}
+
+enum LogSeverity {
+  DEBUG
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+enum LogStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+enum SectionStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum ElementStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PageType {
+  INFORMATION
+  NEED_HELP
+  LEGAL
+  CUSTOM
+}
+
+enum PageStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum CampaignAudience {
+  ALL_SUBSCRIBERS
+  ACTIVE_SUBSCRIBERS
+  TENANTS
+  SPECIFIC_USERS
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+  FAILED
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  FAILED
+}
+
+enum SubscriptionRequestStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+  PENDING_RENEWAL
+}
+
+enum DomainRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CONNECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+  enum UserRole {
+    SUPER_ADMIN
+    ADMIN
+    SUB_ADMIN
+    EMPLOYEE
+    STUDENT
+    AGENT
+  }
+
