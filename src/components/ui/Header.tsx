@@ -15,8 +15,8 @@ export default function Navbar() {
     ];
 
     return (
-        <header className="bg-[#121212] text-white sticky top-0 z-50">
-            <nav className="mx-auto max-w-7xl flex items-center justify-between py-4">
+        <header className="bg-[#023430] text-white sticky top-0 z-50 px-8">
+            <nav className="mx-auto flex items-center justify-between py-4 px-6">
                 <div className="flex">
                     {/* Logo */}
                     <div className="flex items-center flex-1 mr-8">
@@ -79,7 +79,7 @@ export default function Navbar() {
                     </a>
                     <a
                         href="#"
-                        className="bg-gradient-to-r from-purple-500 to-indigo-500 font-semibold text-white px-4 py-2 rounded-md  text-sm "
+                        className="bg-[#00ED64] text-black px-4 py-2 rounded-md  text-sm "
                     >
                         Get Started
                     </a>

@@ -13,8 +13,13 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true, // ⚠️ Not recommended for production
     },
+
     images: {
-        domains: ["tailwindcss.com"], // Legacy support for domains
+        domains: [
+            "tailwindcss.com",
+            "upload.wikimedia.org",
+            "images.unsplash.com",
+        ], // Legacy support for domains
         remotePatterns: [
             {
                 protocol: "https",
