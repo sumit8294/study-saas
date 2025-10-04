@@ -12,10 +12,13 @@ export default function MarketingLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={inter.variable}>
-            <body className="bg-white text-gray-900 antialiased">
+        <html lang="en">
+            <body
+                className="bg-[#001e2b] text-gray-900 antialiased"
+                style={{ fontFamily: "math" }}
+            >
                 <Header />
-                <main className="">{children}</main>
+                <main className="bg-[#001e2b]">{children}</main>
             </body>
         </html>
     );

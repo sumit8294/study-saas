@@ -21,11 +21,11 @@ export default function Page() {
     return (
         <>
             <Hero />
-            <PartnersSection />
+            {/* <PartnersSection /> */}
             <FeatureSection />
             {/* <PortalShowcase /> */}
             <ProductsSection />
-            <StatsSection />
+            {/* <StatsSection /> */}
             <CTASection />
             <GridSection />
             <PriceSection />

@@ -40,10 +40,10 @@ const ClientLogosSection = () => {
     }, []);
 
     const clients = [
-        {
-            src: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg",
-            alt: "MongoDB",
-        },
+        // {
+        //     src: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg",
+        //     alt: "MongoDB",
+        // },
         {
             src: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
             alt: "Tailwind CSS",

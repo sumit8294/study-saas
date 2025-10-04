@@ -2,23 +2,17 @@
 
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
+import PartnersSection from "@/components/sections/PartnersSection";
 
 export default function Hero() {
     return (
-        <section className="isolate bg-[#043632] text-white px-8">
-            {/* <div
-                aria-hidden="true"
-                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-            >
-                <div
-                    style={{
-                        clipPath:
-                            "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-                    }}
-                    className="relative left-1/2 -z-10 aspect-1155/678 w-144.5 max-w-none -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-40rem)] sm:w-288.75"
-                />
-            </div> */}
-
+        <section
+            className="relative bg-[#043632] text-white px-8 overflow-x-hidden overflow-y-clip"
+            style={{
+                borderBottomLeftRadius: "12%",
+                borderBottomRightRadius: "12%",
+            }}
+        >
             <div className="absolute inset-0 pointer-events-none z-10">
                 {/* Radial Gradient SVG Background */}
                 <div
@@ -28,7 +22,7 @@ export default function Hero() {
                     }}
                 />
             </div>
-            <div className="mx-auto px-6 lg:px-8 py-20 z-20">
+            <div className="mx-auto px-6 lg:px-8 py-20 pt-4 z-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
                     <div>
@@ -48,9 +42,9 @@ export default function Hero() {
                         {/* Features List */}
                         <ul className="space-y-3 mb-8">
                             {[
-                                "Masters of Knowledge",
-                                "Lessons at Your Leisure",
-                                "Fellowship of Scholars",
+                                "Built for Agencies",
+                                "Trusted by Institutions",
+                                "Driven by AI",
                             ].map((item) => (
                                 <li
                                     key={item}
@@ -83,8 +77,106 @@ export default function Hero() {
                     </div>
 
                     {/* Right Content (Cards & Images) */}
-                    <div className="grid grid-cols-2 gap-6">
-                        {/* Top Right Scholar */}
+                    <div className="relative h-screen w-full flex items-center justify-center">
+                        {/* Background floating cards */}
+
+                        {/* Top Left Card */}
+                        <div className="absolute top-10 left-0 bg-white rounded-2xl shadow-xl w-80 h-60 p-4">
+                            <div className="h-6 w-full bg-gray-200 rounded mb-3"></div>
+                            <div className="h-6 w-3/4 bg-gray-200 rounded"></div>
+                            <div className="absolute -bottom-6 right-4 h-12 w-12 rounded-full border-4 border-white overflow-hidden">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=100&h=100"
+                                    alt="avatar"
+                                    width={48}
+                                    height={48}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Chat bubble Right */}
+                        <div className="absolute top-32 -right-0 bg-white shadow-xl rounded-xl px-4 py-3 w-72  h-72">
+                            <p className="font-semibold">Zabot</p>
+                            <p className="text-sm text-gray-600">
+                                How are you doing my friend?
+                            </p>
+                            <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                                <span>AI Answered 40 Messages</span>
+                                <span className="font-bold">📊</span>
+                            </div>
+                        </div>
+
+                        {/* Center Large Card */}
+                        <div className="absolute bg-white rounded-2xl shadow-2xl w-72 p-6 top-[210px]">
+                            <div className="flex justify-center">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200"
+                                    alt="avatar"
+                                    width={100}
+                                    height={100}
+                                    className="rounded-xl"
+                                />
+                            </div>
+                            <div className="mt-4 text-center">
+                                <h3 className="font-semibold text-lg">
+                                    Ben Timona
+                                </h3>
+                                <p className="text-gray-600 text-sm">
+                                    Hey there! I have a question…
+                                </p>
+                                <button className="mt-4 bg-indigo-500 text-white px-6 py-2 rounded-xl shadow-md">
+                                    Answer
+                                </button>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-3 text-center">
+                                08 Jan 2024
+                            </p>
+                        </div>
+
+                        {/* Bottom Left Bubble */}
+                        <div className="absolute bottom-80 -left-14 bg-white shadow-md rounded-2xl p-3 w-60 flex gap-2 items-center">
+                            <Image
+                                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=50&h=50"
+                                alt="avatar"
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                            />
+                            <p className="text-sm text-gray-700">
+                                The work super fast, thank you so much 🙌
+                            </p>
+                        </div>
+
+                        {/* Bottom Left Bubble */}
+                        {/* <div className=""> */}
+                        <Image
+                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=50&h=50"
+                            alt="avatar"
+                            width={50}
+                            height={50}
+                            className="absolute bottom-46 left-10 bg-white shadow-md w-28 h-28 rounded-full "
+                        />
+                        {/* </div> */}
+
+                        {/* Bottom Center Small Notification */}
+                        <div className="absolute bottom-24 left-0 bg-white shadow-lg px-5 py-3 rounded-xl text-black w-96 text-sm">
+                            Answered to 12 private messages!
+                        </div>
+
+                        {/* Bottom Right Message Card */}
+                        <div className="absolute bottom-40 -right-10 bg-white shadow-lg rounded-2xl p-4 w-40">
+                            <p className="text-gray-700 text-sm">
+                                I have a doubt on campaign?
+                            </p>
+                            <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+                                <span>2:30pm</span>
+                                <span>Seen</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <div className="grid grid-cols-2 gap-6">
+                        
                         <div className="col-span-2 md:col-span-1 bg-[#F7931A] rounded-2xl flex items-center justify-center relative p-6">
                             <Image
                                 src="/site/images/student-1.png"
@@ -95,18 +187,18 @@ export default function Hero() {
                             />
                             <div className="absolute top-4 right-4 space-y-2 text-sm">
                                 <span className="block bg-black text-white px-3 py-1 rounded-full">
-                                    50+ Manuscripts
+                                    Smarter Recruitment
                                 </span>
                                 <span className="block bg-black text-white px-3 py-1 rounded-full">
-                                    Certified Scrolls
+                                    Verified Applications
                                 </span>
                                 <span className="block bg-black text-white px-3 py-1 rounded-full">
-                                    Noble Studies
+                                    Proven Success
                                 </span>
                             </div>
                         </div>
 
-                        {/* Bottom Left Scholar */}
+                      
                         <div className="bg-[#5B3FFF] rounded-2xl flex items-center justify-center p-6">
                             <Image
                                 src="/site/images/student-2.png"
@@ -117,7 +209,7 @@ export default function Hero() {
                             />
                         </div>
 
-                        {/* Bottom Right Stats */}
+                     
                         <div className="bg-[#FF7A59] rounded-2xl flex flex-col justify-center items-start p-6">
                             <div className="flex -space-x-2 mb-2">
                                 <Image
@@ -147,9 +239,10 @@ export default function Hero() {
                                 Scholars Guided by Our Academy
                             </p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
+            <PartnersSection />
         </section>
     );
 }
