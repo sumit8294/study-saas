@@ -79,7 +79,7 @@ export default function Navbar() {
                     </a>
                     <a
                         href="#"
-                        className="bg-[#00ED64] text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-[#00d45a]"
+                        className="bg-gradient-to-r from-purple-500 to-indigo-500 font-semibold text-white px-4 py-2 rounded-md  text-sm "
                     >
                         Get Started
                     </a>
