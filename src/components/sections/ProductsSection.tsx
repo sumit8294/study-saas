@@ -50,14 +50,14 @@ export default function ProductsSection() {
     }, [studentInView, agentInView, universityInView]);
 
     return (
-        <section className="relative isolate  w-full bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8">
+        <section className="relative isolate  w-full text-white py-16 px-4 sm:px-6 lg:px-8">
             {/* ===== Background Gradients ===== */}
 
             <div
                 aria-hidden="true"
                 className="absolute bottom-0 right-0 w-[300px] h-[300px] -z-10 opacity-40 pointer-events-none"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff80b5] via-[#9089fc] to-[#0B1220] rounded-full blur-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff80b5] via-[#9089fc] to-[#001e2b] rounded-full blur-3xl" />
             </div>
 
             <div
@@ -71,14 +71,14 @@ export default function ProductsSection() {
                 aria-hidden="true"
                 className="absolute bottom-[1150px] right-0 w-[250px] h-[250px] -z-10 opacity-30 pointer-events-none"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff80b5] via-[#9089fc] to-[#0B1220] rounded-full blur-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff80b5] via-[#9089fc] to-[#001e2b] rounded-full blur-3xl" />
             </div>
 
             {/* ===== Layout Grid ===== */}
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+            <div className="px-8 mx-auto grid grid-cols-1 md:grid-cols-6 gap-8 relative z-10">
                 {/* ===== Sidebar ===== */}
                 <div className="lg:col-span-1">
-                    <div className="sticky top-24">
+                    <div className="sticky top-40">
                         {/* <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
                             One platform to scale your student recruitment
                             network.
@@ -128,12 +128,12 @@ export default function ProductsSection() {
                 </div>
 
                 {/* ===== Scrollable Content ===== */}
-                <div className="md:col-span-3 mt-4">
+                <div className="md:col-span-5 mt-4">
                     {/* ===== Student Portal ===== */}
                     <div
                         ref={studentRef}
                         id="student"
-                        className="min-h-[70vh] flex flex-col md:flex-row gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row gap-8 bg-[#061621] rounded-2xl p-10 py-24 mb-20"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -147,7 +147,7 @@ export default function ProductsSection() {
                             <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                 Studia
                             </h3>
-                            <h4 className="text-lg sm:text-xl font-semibold text-indigo-500 mb-4">
+                            <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                 Give Your Students a Better Way to Apply — and
                                 Help Them Succeed
                             </h4>
@@ -163,6 +163,20 @@ export default function ProductsSection() {
                                 and more successful enrollments — without extra
                                 admin work for your team.
                             </p>
+                            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md bg-[#00ED64] px-6 py-3 text-sm font-semibold text-black shadow-lg hover:opacity-90"
+                                >
+                                    Learn More
+                                </a>
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md border border-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                                >
+                                    Documentation
+                                </a>
+                            </div>
                         </motion.div>
 
                         <motion.div
@@ -189,7 +203,7 @@ export default function ProductsSection() {
                     <div
                         ref={agentRef}
                         id="agent"
-                        className="min-h-[70vh] flex flex-col md:flex-row   gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row   gap-8 bg-[#061621] rounded-2xl p-10 py-24 mb-20"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -203,7 +217,7 @@ export default function ProductsSection() {
                             <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                 Nexent
                             </h3>
-                            <h4 className="text-lg sm:text-xl font-semibold text-indigo-500 mb-4">
+                            <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                 Manage Sub-Agents and Their Applications — All
                                 in One Place
                             </h4>
@@ -218,6 +232,20 @@ export default function ProductsSection() {
                                 applications through the funnel — all from a
                                 single, centralized dashboard.
                             </p>
+                            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md bg-[#00ED64] px-6 py-3 text-sm font-semibold text-black shadow-lg hover:opacity-90"
+                                >
+                                    Learn More
+                                </a>
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md border border-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                                >
+                                    Documentation
+                                </a>
+                            </div>
                         </motion.div>
 
                         <motion.div
@@ -244,7 +272,7 @@ export default function ProductsSection() {
                     <div
                         ref={universityRef}
                         id="university"
-                        className="min-h-[70vh] flex flex-col md:flex-row   gap-8"
+                        className="min-h-[70vh] flex flex-col md:flex-row gap-8 bg-[#061621] rounded-2xl p-10 py-24 mb-20"
                     >
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -258,7 +286,7 @@ export default function ProductsSection() {
                             <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                 Campora
                             </h3>
-                            <h4 className="text-lg sm:text-xl font-semibold text-indigo-500 mb-4">
+                            <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                 Give Universities Direct Control Over Their
                                 Student Applications
                             </h4>
@@ -273,6 +301,20 @@ export default function ProductsSection() {
                                 universities can focus on enrolling the best
                                 students.
                             </p>
+                            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md bg-[#00ED64] px-6 py-3 text-sm font-semibold text-black shadow-lg hover:opacity-90"
+                                >
+                                    Learn More
+                                </a>
+                                <a
+                                    href="#"
+                                    className="inline-block rounded-md border border-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                                >
+                                    Documentation
+                                </a>
+                            </div>
                         </motion.div>
 
                         <motion.div

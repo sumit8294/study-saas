@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function DualPortalAdvantage() {
     return (
-        <section className="bg-[#0B1220] text-white py-20 px-6">
+        <section className="bg-[#001e2b] text-white py-20 px-6">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 {/* Left Side - Dashboard Mockup */}
                 <div className="bg-[#111827] rounded-2xl shadow-lg overflow-hidden border border-gray-800">

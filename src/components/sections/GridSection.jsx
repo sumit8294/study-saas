@@ -2,10 +2,10 @@ import Image from "next/image";
 
 export default function TestimonialsSection() {
     return (
-        <section className="relative bg-[#0B1220] py-20 px-6">
+        <section className="relative bg-[#001e2b] py-20 px-6">
             <div className="max-w-7xl mx-auto text-center">
                 {/* Header */}
-                <p className="text-indigo-400 font-medium tracking-wide">
+                <p className="text-[#00ed64] font-medium tracking-wide">
                     Testimonials
                 </p>
                 <h2 className="mt-4 text-4xl md:text-5xl font-bold text-white">

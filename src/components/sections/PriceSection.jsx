@@ -1,169 +1,428 @@
-import { CheckIcon } from "@heroicons/react/20/solid";
+import React from "react";
 
-const tiers = [
-    {
-        name: "Hobby",
-        id: "tier-hobby",
-        href: "#",
-        priceMonthly: "$29",
-        description:
-            "The perfect plan if you're just getting started with our product.",
-        features: [
-            "25 products",
-            "Up to 10,000 subscribers",
-            "Advanced analytics",
-            "24-hour support response time",
-        ],
-        featured: false,
-    },
-    {
-        name: "Enterprise",
-        id: "tier-enterprise",
-        href: "#",
-        priceMonthly: "$99",
-        description: "Dedicated support and infrastructure for your company.",
-        features: [
-            "Unlimited products",
-            "Unlimited subscribers",
-            "Advanced analytics",
-            "Dedicated support representative",
-            "Marketing automations",
-            "Custom integrations",
-        ],
-        featured: true,
-    },
-];
+const PricingSection = () => {
+    const primaryColor = "#00ed64";
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
-
-export default function Example() {
     return (
-        <div className="relative isolate bg-white px-6 py-20 sm:py-20 lg:px-8">
-            <div
-                aria-hidden="true"
-                className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
+        <>
+            {/* Header Section */}
+            <section
+                className="py-8 lg:py-12 bg-primary"
+                style={{ backgroundColor: primaryColor }}
             >
-                <div
-                    style={{
-                        clipPath:
-                            "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-                    }}
-                    className="mx-auto aspect-1155/678 w-288.75 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
-                />
-            </div>
-            <div className="mx-auto max-w-4xl text-center">
-                <h2 className="text-base/7 font-semibold text-indigo-600">
-                    Pricing
-                </h2>
-                <p className="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-6xl">
-                    Choose the right plan for you
-                </p>
-            </div>
-            <p className="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-600 sm:text-xl/8">
-                Choose an affordable plan that’s packed with the best features
-                for engaging your audience, creating customer loyalty, and
-                driving sales.
-            </p>
-            <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
-                {tiers.map((tier, tierIdx) => (
-                    <div
-                        key={tier.id}
-                        className={classNames(
-                            tier.featured
-                                ? "relative bg-gray-900 shadow-2xl"
-                                : "bg-white/60 sm:mx-8 lg:mx-0",
-                            tier.featured
-                                ? ""
-                                : tierIdx === 0
-                                ? "rounded-t-3xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-bl-3xl"
-                                : "sm:rounded-t-none lg:rounded-tr-3xl lg:rounded-bl-none",
-                            "rounded-3xl p-8 ring-1 ring-gray-900/10 sm:p-10"
-                        )}
-                    >
-                        <h3
-                            id={tier.id}
-                            className={classNames(
-                                tier.featured
-                                    ? "text-indigo-400"
-                                    : "text-indigo-600",
-                                "text-base/7 font-semibold"
-                            )}
-                        >
-                            {tier.name}
-                        </h3>
-                        <p className="mt-4 flex items-baseline gap-x-2">
-                            <span
-                                className={classNames(
-                                    tier.featured
-                                        ? "text-white"
-                                        : "text-gray-900",
-                                    "text-5xl font-semibold tracking-tight"
-                                )}
-                            >
-                                {tier.priceMonthly}
-                            </span>
-                            <span
-                                className={classNames(
-                                    tier.featured
-                                        ? "text-gray-400"
-                                        : "text-gray-500",
-                                    "text-base"
-                                )}
-                            >
-                                /month
-                            </span>
-                        </p>
-                        <p
-                            className={classNames(
-                                tier.featured
-                                    ? "text-gray-300"
-                                    : "text-gray-600",
-                                "mt-6 text-base/7"
-                            )}
-                        >
-                            {tier.description}
-                        </p>
-                        <ul
-                            role="list"
-                            className={classNames(
-                                tier.featured
-                                    ? "text-gray-300"
-                                    : "text-gray-600",
-                                "mt-8 space-y-3 text-sm/6 sm:mt-10"
-                            )}
-                        >
-                            {tier.features.map((feature) => (
-                                <li key={feature} className="flex gap-x-3">
-                                    <CheckIcon
-                                        aria-hidden="true"
-                                        className={classNames(
-                                            tier.featured
-                                                ? "text-indigo-400"
-                                                : "text-indigo-600",
-                                            "h-6 w-5 flex-none"
-                                        )}
-                                    />
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
-                        <a
-                            href={tier.href}
-                            aria-describedby={tier.id}
-                            className={classNames(
-                                tier.featured
-                                    ? "bg-indigo-500 text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-indigo-500"
-                                    : "text-indigo-600 inset-ring inset-ring-indigo-200 hover:inset-ring-indigo-300 focus-visible:outline-indigo-600",
-                                "mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10"
-                            )}
-                        >
-                            Get started today
-                        </a>
+                <div className="container mx-auto px-4">
+                    {/* Page header */}
+                    <div className="flex flex-col items-center">
+                        <div className="w-full lg:w-8/12 xl:w-6/12">
+                            <div className="text-center mb-6 px-0 md:px-8">
+                                <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                                    Simple pricing that scales with your
+                                    business
+                                </h1>
+                                <p className="text-white text-lg md:text-xl mb-6">
+                                    Streamline your student recruitment with
+                                    flexible plans designed for education
+                                    agencies of all sizes.
+                                </p>
+                                {/* Switch Toggle */}
+                                <div className="flex justify-center items-center">
+                                    <span className="text-white mr-2">
+                                        Monthly
+                                    </span>
+                                    <div className="relative inline-block w-12 mr-2 align-middle select-none">
+                                        <input
+                                            type="checkbox"
+                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                            defaultChecked
+                                            style={{
+                                                borderColor: primaryColor,
+                                            }}
+                                        />
+                                        <label
+                                            className="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"
+                                            style={{
+                                                backgroundColor: primaryColor,
+                                            }}
+                                        ></label>
+                                    </div>
+                                    <span className="text-white ml-2">
+                                        Yearly
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                ))}
-            </div>
-        </div>
+                </div>
+            </section>
+
+            {/* Pricing Cards Section */}
+            <section className="mt-[-2rem] pb-8">
+                <div className="container mx-auto px-4 flex justify-center">
+                    <div className="grid grid-cols-1 max-w-7xl lg:grid-cols-3 gap-6 ">
+                        {/* Starter Plan */}
+                        <div className="col-span-1">
+                            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+                                {/* Card body */}
+                                <div className="p-6 text-center">
+                                    <div
+                                        className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center"
+                                        style={{
+                                            backgroundColor: `${primaryColor}20`,
+                                        }}
+                                    >
+                                        <svg
+                                            className="w-8 h-8"
+                                            style={{ color: primaryColor }}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="mb-5">
+                                        <h2 className="text-xl font-bold mb-2">
+                                            Starter
+                                        </h2>
+                                        <p className="text-gray-600">
+                                            Perfect for individual agents
+                                            starting their recruitment journey
+                                            with basic platform access.
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center items-end mb-4">
+                                        <span className="text-2xl font-bold">
+                                            $
+                                        </span>
+                                        <div className="text-4xl font-bold mx-1">
+                                            0
+                                        </div>
+                                        <span className="text-gray-500 mb-1">
+                                            /Yearly
+                                        </span>
+                                    </div>
+                                    <div className="w-full">
+                                        <button
+                                            className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                            style={{
+                                                borderColor: primaryColor,
+                                                color: primaryColor,
+                                            }}
+                                        >
+                                            Get Started for Free
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr className="m-0" />
+                                <div className="p-6">
+                                    <h4 className="font-bold mb-4 text-gray-900">
+                                        All core features, including:
+                                    </h4>
+                                    {/* List */}
+                                    <ul className="space-y-2">
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Up to 50 student applications
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Basic student portal access
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                <span className="font-bold text-dark">
+                                                    5GB{" "}
+                                                </span>
+                                                document storage
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Basic analytics dashboard
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>Mobile app access</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>Email support</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Individual Plan */}
+                        <div className="col-span-1">
+                            <div className="bg-white rounded-lg shadow-md border border-gray-200 mb-4 lg:mb-0">
+                                {/* Card body */}
+                                <div className="p-6 text-center">
+                                    <div
+                                        className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center"
+                                        style={{
+                                            backgroundColor: `${primaryColor}20`,
+                                        }}
+                                    >
+                                        <svg
+                                            className="w-8 h-8"
+                                            style={{ color: primaryColor }}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="mb-5">
+                                        <h2 className="text-xl font-bold mb-2">
+                                            Professional
+                                        </h2>
+                                        <p className="text-gray-600">
+                                            For growing agencies needing
+                                            advanced features and higher
+                                            application volumes.
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center items-end mb-4">
+                                        <span className="text-2xl font-bold">
+                                            $
+                                        </span>
+                                        <div className="text-4xl font-bold mx-1">
+                                            99
+                                        </div>
+                                        <span className="text-gray-500 mb-1">
+                                            /Yearly
+                                        </span>
+                                    </div>
+                                    <div className="w-full">
+                                        <button
+                                            className="w-full py-2 px-4 rounded-lg text-white transition-colors"
+                                            style={{
+                                                backgroundColor: primaryColor,
+                                            }}
+                                        >
+                                            Get Monthly Access
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr className="m-0" />
+                                <div className="p-6">
+                                    <h4 className="font-bold mb-4 text-gray-900">
+                                        Everything in Starter, plus:
+                                    </h4>
+                                    {/* List */}
+                                    <ul className="space-y-2">
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Up to 500 student applications
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>Advanced student portal</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                <span className="font-bold">
+                                                    Unlimited{" "}
+                                                </span>
+                                                document storage
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>Custom domain support</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Bulk application processing
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Priority email & chat support
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Team Plan */}
+                        <div className="col-span-1">
+                            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 lg:mb-0">
+                                {/* Card body */}
+                                <div className="p-6 text-center">
+                                    <div
+                                        className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center"
+                                        style={{
+                                            backgroundColor: `${primaryColor}20`,
+                                        }}
+                                    >
+                                        <svg
+                                            className="w-8 h-8"
+                                            style={{ color: primaryColor }}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="mb-5">
+                                        <h2 className="text-xl font-bold mb-2">
+                                            Enterprise
+                                        </h2>
+                                        <p className="text-gray-600">
+                                            For large agencies with multiple
+                                            team members and unlimited
+                                            recruitment needs.
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-center items-end mb-4">
+                                        <span className="text-2xl font-bold">
+                                            $
+                                        </span>
+                                        <div className="text-4xl font-bold mx-1">
+                                            199
+                                        </div>
+                                        <span className="text-gray-500 mb-1">
+                                            /Yearly
+                                        </span>
+                                    </div>
+                                    <div className="w-full">
+                                        <button
+                                            className="w-full py-2 px-4 border rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                            style={{
+                                                borderColor: primaryColor,
+                                                color: primaryColor,
+                                            }}
+                                        >
+                                            Get Team Access
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr className="m-0" />
+                                <div className="p-6">
+                                    <h4 className="font-bold mb-4 text-gray-900">
+                                        Everything in Professional, plus:
+                                    </h4>
+                                    {/* List */}
+                                    <ul className="space-y-2">
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Unlimited student applications
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                <span className="font-bold">
+                                                    Multi-team{" "}
+                                                </span>
+                                                access
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                <span className="font-bold">
+                                                    99.9% uptime{" "}
+                                                </span>
+                                                guarantee
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                Advanced analytics & reporting
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                API access & custom integrations
+                                            </span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-green-500 mr-2 mt-1">
+                                                ✓
+                                            </span>
+                                            <span>
+                                                24/7 dedicated phone support
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </>
     );
-}
+};
+
+export default PricingSection;

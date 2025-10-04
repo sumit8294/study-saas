@@ -26,7 +26,7 @@ export default function Page() {
             {/* <PortalShowcase /> */}
             <ProductsSection />
             {/* <StatsSection /> */}
-            <CTASection />
+            {/* <CTASection /> */}
             <GridSection />
             <PriceSection />
             <BlogSection />
