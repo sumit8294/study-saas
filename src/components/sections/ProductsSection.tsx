@@ -68,7 +68,7 @@ export default function ProductsSection() {
     return (
         <>
             <GraphSection />
-            <section className="relative isolate  w-full text-white py-16 px-4 sm:px-6 lg:px-8">
+            <section className="relative isolate  w-full text-white py-16 lg:pb-20 px-4 sm:px-6 lg:px-8">
                 {/* ===== Background Gradients ===== */}
 
                 <div
@@ -93,9 +93,9 @@ export default function ProductsSection() {
                 </div>
 
                 {/* ===== Layout Grid ===== */}
-                <div className="px-8 mx-auto grid grid-cols-1 md:grid-cols-6 gap-8 relative z-10">
+                <div className="px-8 mx-auto grid grid-cols-1 md:grid-cols-7 gap-8 relative z-10">
                     {/* ===== Sidebar ===== */}
-                    <div className="lg:col-span-1">
+                    <div className="lg:col-span-2">
                         <div className="sticky top-40">
                             {/* <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
                             One platform to scale your student recruitment

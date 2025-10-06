@@ -72,7 +72,7 @@ export default function Example() {
 
             <div
                 aria-hidden="true"
-                className="absolute top-0 -left-1/3 -z-10 -translate-x-1/2 blur-3xl xl:-top-6"
+                className="absolute top-50 -left-1/3 -z-10 -translate-x-1/2 blur-3xl xl:-top-6"
             >
                 <div
                     style={{
