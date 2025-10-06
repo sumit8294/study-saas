@@ -241,7 +241,7 @@ export default function Footer() {
 
                 {/* Bottom Section */}
                 <div className="text-center text-base text-gray-500">
-                    © 2024 Your Company, Inc. All rights reserved.
+                    © 2025 Apply Tech, Inc. All rights reserved.
                 </div>
             </div>
         </footer>
