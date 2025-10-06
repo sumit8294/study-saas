@@ -28,7 +28,7 @@ const nodes: Node[] = [
         data: {
             label: (
                 <div
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between z-10"
                     style={cardStyle}
                 >
                     <div>
@@ -69,7 +69,7 @@ const nodes: Node[] = [
         data: {
             label: (
                 <div
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between z-20"
                     style={cardStyle}
                 >
                     <div>
@@ -246,7 +246,13 @@ const edges: Edge[] = [
 const GraphSection: React.FC = () => {
     return (
         <>
-            <div className="w-full h-[300] sm:h-[400] md:h-[500] lg:h-[800px] relative">
+            <div className="w-full h-[300] sm:h-[400] md:h-[500] lg:h-[800px] relative overflow-hidden">
+                {/* <div
+                    aria-hidden="true"
+                    className="absolute bottom-150 right-0 w-[450px] h-[250px] z-50 opacity-30 pointer-events-none"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-800 to-green-500 rounded-full blur-3xl" />
+                </div> */}
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
@@ -257,16 +263,27 @@ const GraphSection: React.FC = () => {
                     zoomOnPinch={false}
                     panOnDrag={false}
                     panOnScroll={false}
+                    // style={{
+                    //     background: "#061621",
+                    // }}
                     style={{
-                        background: "transparent",
+                        background:
+                            "linear-gradient(315deg, #061621 0%, #0a2a3a 50%, #061621 100%)",
                     }}
-                    className="!bg-transparent"
+                    className="#061621"
+                />
+                <div
+                    aria-hidden="true"
+                    className="absolute bottom-0 right-0 w-[250px] h-[250px] z-50 opacity-30 pointer-events-none"
+                >
+                    {/* <div className="absolute inset-0 bg-gradient-to-br from-[#9089fc] via-[#ff80b5] to-transparent rounded-full blur-3xl" /> */}
+                </div>
+
+                <div
+                    className="absolute inset-0 pointer-events-auto"
+                    style={{ background: "transparent" }}
                 />
             </div>
-            <div
-                className="absolute inset-0 pointer-events-auto"
-                style={{ background: "transparent" }}
-            />
         </>
     );
 };

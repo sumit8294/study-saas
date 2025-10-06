@@ -35,7 +35,7 @@ export default function AllProducts() {
     });
 
     return (
-        <section className="relative isolate w-full text-white py-20 lg:pb-8 px-4 sm:px-6 lg:px-8 mt-10">
+        <section className="relative isolate w-full text-white py-24 px-4 sm:px-6 lg:px-8 ">
             <div className="max-w-7xl mx-auto z-10">
                 <div
                     ref={studentRef}
@@ -53,12 +53,17 @@ export default function AllProducts() {
                         className="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center"
                     >
                         <h4 className="text-[#00ed64] text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-                            The Complete Student Recruitment Package
+                            The Complete Student Recruitment Ecosystem
                         </h4>
                         <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                            One platform with 4 connected portals—designed for
-                            students, agents, universities, and managed
-                            seamlessly by admin.
+                            Experience a unified platform with four seamlessly
+                            connected portals — built for students, agents, and
+                            universities, and efficiently managed through a
+                            powerful admin dashboard.
+                        </p>
+                        <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-4 sm:mb-6 leading-relaxed">
+                            Simplify applications, strengthen partnerships, and
+                            accelerate student success — all in one place.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
