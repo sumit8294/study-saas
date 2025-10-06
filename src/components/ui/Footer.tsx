@@ -4,49 +4,60 @@ export default function Footer() {
     return (
         <footer className="bg-[#001e2b] text-gray-400">
             <div className="max-w-7xl mx-auto px-6 py-12">
-                {/* Top Section */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                    {/* Logo and Description */}
-                    <div>
-                        {/* <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
-                            <span className="text-white text-lg font-bold">
-                                Your Company
-                            </span>
-                        </div> */}
-                        <p className="mt-4 text-sm max-w-xs">
-                            One platform to scale your student recruitment
-                            network.
-                        </p>
-                    </div>
-
-                    {/* Social Icons */}
-                    <div className="flex space-x-5 mt-6 md:mt-0">
-                        <a href="#" className="hover:text-white transition">
-                            <Facebook size={20} />
-                        </a>
-                        <a href="#" className="hover:text-white transition">
-                            <Instagram size={20} />
-                        </a>
-                        <a href="#" className="hover:text-white transition">
-                            <Twitter size={20} />
-                        </a>
-                        <a href="#" className="hover:text-white transition">
-                            <Github size={20} />
-                        </a>
-                        <a href="#" className="hover:text-white transition">
-                            <Youtube size={20} />
-                        </a>
-                    </div>
-                </div>
-
-                {/* Divider */}
-                <div className="border-t border-gray-800 my-8"></div>
-
                 {/* Footer Links */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-12 gap-8">
+                    {/* Brand */}
+
+                    <div className="col-span-3">
+                        <div className="flex flex-col gap-4">
+                            <div>
+                                <img
+                                    src="/site/logo.png"
+                                    alt="Apply logo"
+                                    className="h-16 w-auto"
+                                />
+                            </div>
+                            <p className="mb-0 text-gray-600 dark:text-gray-300">
+                                One platform to scale your <br /> student
+                                recruitment network.
+                            </p>
+                            <div className="flex space-x-5 mt-6 md:mt-0">
+                                <a
+                                    href="#"
+                                    className="hover:text-white transition"
+                                >
+                                    <Facebook size={20} />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="hover:text-white transition"
+                                >
+                                    <Instagram size={20} />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="hover:text-white transition"
+                                >
+                                    <Twitter size={20} />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="hover:text-white transition"
+                                >
+                                    <Github size={20} />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="hover:text-white transition"
+                                >
+                                    <Youtube size={20} />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Solutions */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-white font-semibold mb-4">
                             Solutions
                         </h3>
@@ -80,7 +91,7 @@ export default function Footer() {
                     </div>
 
                     {/* Support */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-white font-semibold mb-4">
                             Support
                         </h3>
@@ -104,7 +115,7 @@ export default function Footer() {
                     </div>
 
                     {/* Company */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-white font-semibold mb-4">
                             Company
                         </h3>
@@ -133,7 +144,7 @@ export default function Footer() {
                     </div>
 
                     {/* Legal */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-white font-semibold mb-4">Legal</h3>
                         <ul className="space-y-2 text-sm">
                             <li>

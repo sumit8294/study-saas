@@ -11,21 +11,21 @@ const products = [
         title: "Student Portal",
         description:
             "Access 20,000+ courses, apply with ease, track your application, and get expert guidance at every step.",
-        image: "/site/images/products/student-light.png",
+        image: "/site/images/products/university-light.jpg",
     },
     {
         id: "agent",
         title: "Agent Portal",
         description:
             "Manage student profiles, track applications, and collaborate with universities all in one place.",
-        image: "/site/images/products/agent-light.png",
+        image: "/site/images/products/university-light.jpg",
     },
     {
         id: "university",
         title: "University Portal",
         description:
             "Engage with students and agents, manage courses, and streamline the entire admission process.",
-        image: "/site/images/products/university-light.png",
+        image: "/site/images/products/university-light.jpg",
     },
 ];
 

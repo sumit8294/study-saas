@@ -1,5 +1,6 @@
 "use client";
 
+import { GraduationCap, TrendingUp } from "lucide-react";
 import Image from "next/image";
 
 export default function HeroGrid() {
@@ -82,12 +83,10 @@ export default function HeroGrid() {
 
                 {/* Bottom Left Bubble */}
                 <div className="absolute bottom-68 -left-8 bg-white shadow-lg rounded-xl p-3 w-56 flex gap-3 items-center">
-                    <Image
-                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=48&h=48"
-                        alt="avatar"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
+                    <TrendingUp
+                        className="rounded-full p-2 bg-green-100 text-green-400 shrink-0"
+                        size={40}
+                        strokeWidth={2}
                     />
                     <p className="text-sm text-gray-700">
                         Process 40% More Student Applications
@@ -95,12 +94,11 @@ export default function HeroGrid() {
                 </div>
 
                 {/* Bottom Left Avatar */}
-                <Image
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96"
-                    alt="avatar"
-                    width={80}
-                    height={80}
-                    className="absolute bottom-36 left-16 bg-white shadow-lg w-20 h-20 rounded-full"
+                <GraduationCap
+                    className="absolute bottom-36 left-16 bg-[#375b63] shadow-lg w-20 h-20 rounded-full p-4"
+                    size={80}
+                    color="#00ed64"
+                    strokeWidth={1.5}
                 />
 
                 {/* Bottom Center Small Notification */}
