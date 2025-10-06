@@ -9,24 +9,38 @@ import AllProducts from "./AllProducts";
 
 const products = [
     {
-        id: "student",
-        title: "Student Portal",
+        id: "ai-search",
+        title: "AI-enabled Intelligent Search",
         description:
-            "Access 20,000+ courses, apply with ease, track your application, and get expert guidance at every step.",
+            "Find relevant courses, students, or agents instantly using AI-powered search algorithms for precise and faster results.",
         image: "/site/images/products/university-light.jpg",
     },
     {
-        id: "agent",
-        title: "Agent Portal",
+        id: "document-verification",
+        title: "Document Verification & Authentication",
         description:
-            "Manage student profiles, track applications, and collaborate with universities all in one place.",
+            "Verify and authenticate important documents securely and efficiently with advanced AI validation tools.",
         image: "/site/images/products/university-light.jpg",
     },
     {
-        id: "university",
-        title: "University Portal",
+        id: "real-time-analytics",
+        title: "Real-time Reports & Analytics",
         description:
-            "Engage with students and agents, manage courses, and streamline the entire admission process.",
+            "Get actionable insights and comprehensive reports instantly with real-time analytics across your portal.",
+        image: "/site/images/products/university-light.jpg",
+    },
+    {
+        id: "secure-wallet",
+        title: "Secure Wallet & Transactions",
+        description:
+            "Manage transactions and store funds safely with a secure and AI-monitored wallet system.",
+        image: "/site/images/products/university-light.jpg",
+    },
+    {
+        id: "seamless-communication",
+        title: "Seamless Communication",
+        description:
+            "Connect with students, agents, and universities effortlessly through an integrated AI-enhanced communication platform.",
         image: "/site/images/products/university-light.jpg",
     },
 ];
@@ -54,7 +68,6 @@ export default function ProductsSection() {
     return (
         <>
             <GraphSection />
-            <AllProducts />
             <section className="relative isolate  w-full text-white py-16 px-4 sm:px-6 lg:px-8">
                 {/* ===== Background Gradients ===== */}
 
@@ -112,15 +125,15 @@ export default function ProductsSection() {
                                         </h3>
                                         {activeTab === product.id && (
                                             <p className="mt-2 text-sm text-gray-400">
-                                                {product.description}
+                                                {/* {product.description} */}
                                             </p>
                                         )}
                                         {activeTab === product.id && (
                                             <button className="mt-3 text-sm text-white font-medium flex items-center gap-1 group">
-                                                Learn more
+                                                {/* Learn more
                                                 <span className="group-hover:translate-x-1 transition-transform">
                                                     ›
-                                                </span>
+                                                </span> */}
                                             </button>
                                         )}
                                     </div>

@@ -16,13 +16,15 @@ import StudentPortalSection from "@/components/sections/StudentPortalSection";
 import UniversityPortalSection from "@/components/sections/UniversityPortalSection";
 import AgentPortalSection from "@/components/sections/AgentPortalSection";
 import ProductsSection from "@/components/sections/ProductsSection";
+import AllProducts from "@/components/sections/AllProducts";
 
 export default function Page() {
     return (
         <>
             <Hero />
+            <AllProducts />
             {/* <PartnersSection /> */}
-            <FeatureSection />
+            {/* <FeatureSection /> */}
             {/* <PortalShowcase /> */}
             <ProductsSection />
             {/* <StatsSection /> */}

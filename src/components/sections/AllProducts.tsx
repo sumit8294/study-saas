@@ -35,12 +35,12 @@ export default function AllProducts() {
     });
 
     return (
-        <section className="relative isolate w-full text-white py-20 sm:py-6 lg:py-8 px-4 sm:px-6 lg:px-8">
+        <section className="relative isolate w-full text-white py-20  px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto z-10">
                 <div
                     ref={studentRef}
                     id="student"
-                    className="min-h-[50vh] sm:min-h-[60vh] lg:min-h-[70vh] flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12 bg-[#061621] rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 py-8 sm:py-12 lg:py-16 mb-12 sm:mb-16 lg:mb-20"
+                    className="min-h-[50vh] sm:min-h-[60vh] lg:min-h-[70vh] flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12 bg-[#061621] rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 py-8 sm:py-12 lg:py-16 mb-12 sm:mb-16 lg:mb-4"
                 >
                     {/* Text Content */}
                     <motion.div
@@ -167,8 +167,8 @@ export default function AllProducts() {
 
             {/* Background decorative elements */}
             <div className="absolute inset-0 -z-10 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
+                <div className="absolute -top-0 -right-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
+                <div className="absolute -bottom-0 -left-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
             </div>
         </section>
     );
