@@ -29,7 +29,7 @@ export default function Page() {
             {/* <CTASection /> */}
             {/* <GridSection /> */}
             <PriceSection />
-            <BlogSection />
+            {/* <BlogSection /> */}
             {/* <ContactSection /> */}
             <NewsLetterSection />
 

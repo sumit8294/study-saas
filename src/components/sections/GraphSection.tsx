@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import ReactFlow, {
-    Node,
-    Edge,
-    Background,
-    Controls,
-    MiniMap,
-} from "reactflow";
+import ReactFlow, { Node, Edge } from "reactflow";
 import "reactflow/dist/style.css";
 import {
     GraduationCap as FaUserGraduate,
@@ -18,7 +12,7 @@ import {
 } from "lucide-react";
 
 const cardStyle = {
-    background: "#0f1115",
+    background: "#061621",
     color: "#e5e7eb",
     borderRadius: 16,
     padding: 16,
@@ -38,24 +32,24 @@ const nodes: Node[] = [
                     style={cardStyle}
                 >
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center text-start gap-2 mb-2">
                             <FaUserGraduate className="w-5 h-5 text-blue-400" />
                             <h4 className="font-semibold text-white">
                                 Student Portal
                             </h4>
                         </div>
-                        <p className="text-gray-400 text-sm mb-3">
-                            A smart portal for students to manage and track
-                            their study abroad journey.
+                        <p className="text-gray-400  text-start text-sm mb-3">
+                            A portal for students to manage their study abroad
+                            journey.
                         </p>
-                        <ul className="text-sm space-y-1 text-gray-300">
+                        <ul className="text-xs space-y-1 text-start  text-gray-300">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
                                 Upload common documents
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
-                                Shortlist and compare courses
+                                Shortlist courses
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
@@ -63,7 +57,7 @@ const nodes: Node[] = [
                             </li>
                         </ul>
                     </div>
-                    <FaUserGraduate className="w-16 h-16 text-blue-800 opacity-40" />
+                    <FaUserGraduate className="w-32 h-32 text-blue-800 opacity-40" />
                 </div>
             ),
         },
@@ -85,11 +79,11 @@ const nodes: Node[] = [
                                 Agent Portal
                             </h4>
                         </div>
-                        <p className="text-gray-400 text-sm mb-3">
+                        <p className="text-gray-400 text-start text-sm mb-3">
                             Streamlined tools for agencies to handle student
-                            applications efficiently.
+                            applications.
                         </p>
-                        <ul className="text-sm space-y-1 text-gray-300">
+                        <ul className="text-xs space-y-1 text-gray-300">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
                                 Manage student profiles
@@ -104,7 +98,7 @@ const nodes: Node[] = [
                             </li>
                         </ul>
                     </div>
-                    <FaUserTie className="w-16 h-16 text-emerald-800 opacity-40" />
+                    <FaUserTie className="w-32 h-32 text-emerald-800 opacity-40" />
                 </div>
             ),
         },
@@ -112,7 +106,7 @@ const nodes: Node[] = [
     },
     {
         id: "admin",
-        position: { x: 400, y: 230 },
+        position: { x: 370, y: 230 },
         data: {
             label: (
                 <div
@@ -126,11 +120,11 @@ const nodes: Node[] = [
                                 Admin Panel
                             </h4>
                         </div>
-                        <p className="text-gray-400 text-sm mb-3">
+                        <p className="text-gray-400 text-start text-sm mb-3">
                             The central command to manage users, institutions,
                             and global operations.
                         </p>
-                        <ul className="text-sm space-y-1 text-gray-300">
+                        <ul className="text-xs space-y-1 text-gray-300">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
                                 Control all portals
@@ -145,7 +139,7 @@ const nodes: Node[] = [
                             </li>
                         </ul>
                     </div>
-                    <FaCogs className="w-16 h-16 text-purple-800 opacity-40" />
+                    <FaCogs className="w-32 h-32 text-purple-800 opacity-40" />
                 </div>
             ),
         },
@@ -153,7 +147,7 @@ const nodes: Node[] = [
     },
     {
         id: "university",
-        position: { x: 850, y: 230 },
+        position: { x: 750, y: 230 },
         data: {
             label: (
                 <div
@@ -167,11 +161,11 @@ const nodes: Node[] = [
                                 University Portal
                             </h4>
                         </div>
-                        <p className="text-gray-400 text-sm mb-3">
-                            The destination for universities to receive and
-                            manage student applications.
+                        <p className="text-gray-400 text-start text-sm mb-3">
+                            The destination for universities to manage student
+                            applications.
                         </p>
-                        <ul className="text-sm space-y-1 text-gray-300">
+                        <ul className="text-xs space-y-1 text-gray-300">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-400" />
                                 Review & accept applications
@@ -186,7 +180,7 @@ const nodes: Node[] = [
                             </li>
                         </ul>
                     </div>
-                    <FaUniversity className="w-16 h-16 text-yellow-800 opacity-40" />
+                    <FaUniversity className="w-32 h-32 text-yellow-800 opacity-40" />
                 </div>
             ),
         },
@@ -195,33 +189,85 @@ const nodes: Node[] = [
 ];
 
 const edges: Edge[] = [
-    { id: "student-admin", source: "student", target: "admin", animated: true },
-    { id: "agent-admin", source: "agent", target: "admin", animated: true },
+    {
+        id: "student-admin",
+        source: "student",
+        target: "admin",
+        animated: true,
+        style: {
+            stroke: "#8b5cf6",
+            strokeWidth: 2,
+        },
+    },
+    {
+        id: "student-university",
+        source: "student",
+        target: "university",
+        animated: true,
+        style: {
+            stroke: "yellow",
+            strokeWidth: 3.5,
+            strokeDasharray: "5,5",
+        },
+    },
+    {
+        id: "agent-university",
+        source: "agent",
+        target: "university",
+        animated: true,
+        style: {
+            stroke: "yellow",
+            strokeWidth: 3.5,
+            strokeDasharray: "5,5",
+        },
+    },
+    {
+        id: "agent-admin",
+        source: "agent",
+        target: "admin",
+        animated: true,
+        style: {
+            stroke: "#8b5cf6",
+            strokeWidth: 2,
+        },
+    },
     {
         id: "admin-university",
         source: "admin",
         target: "university",
         animated: true,
+        style: {
+            stroke: "#8b5cf6",
+            strokeWidth: 3,
+        },
     },
 ];
 
 const GraphSection: React.FC = () => {
     return (
-        <div className="w-full h-[700px] bg-[#0b0d10] rounded-2xl shadow-2xl">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                fitView
-                nodesDraggable={false}
-                zoomOnScroll={false}
-                zoomOnPinch={false}
-                panOnDrag={false}
-            >
-                <Background color="#1f2937" gap={20} />
-                <MiniMap nodeColor={() => "#1f2937"} />
-                <Controls showInteractive={false} />
-            </ReactFlow>
-        </div>
+        <>
+            <div className="w-full h-[300] sm:h-[400] md:h-[500] lg:h-[800px] relative">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    fitView
+                    nodesDraggable={false}
+                    selectionOnDrag={false}
+                    zoomOnScroll={false}
+                    zoomOnPinch={false}
+                    panOnDrag={false}
+                    panOnScroll={false}
+                    style={{
+                        background: "transparent",
+                    }}
+                    className="!bg-transparent"
+                />
+            </div>
+            <div
+                className="absolute inset-0 pointer-events-auto"
+                style={{ background: "transparent" }}
+            />
+        </>
     );
 };
 

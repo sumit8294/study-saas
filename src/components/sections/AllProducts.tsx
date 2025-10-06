@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import Image from "next/image";
+import { useInView } from "react-intersection-observer";
 
 const products = [
     {
@@ -30,167 +29,147 @@ const products = [
 ];
 
 export default function AllProducts() {
-    const [activeTab, setActiveTab] = useState(products[0].id);
-
     const { ref: studentRef, inView: studentInView } = useInView({
-        threshold: 0.4,
+        threshold: 0.3,
+        triggerOnce: true,
     });
-    const { ref: agentRef, inView: agentInView } = useInView({
-        threshold: 0.4,
-    });
-    const { ref: universityRef, inView: universityInView } = useInView({
-        threshold: 0.4,
-    });
-
-    // Update active tab on scroll
-    useEffect(() => {
-        if (studentInView) setActiveTab("student");
-        else if (agentInView) setActiveTab("agent");
-        else if (universityInView) setActiveTab("university");
-    }, [studentInView, agentInView, universityInView]);
 
     return (
-        <>
-            <div className="py-16 bg-white dark:bg-gray-900">
-                <div className="container mx-auto px-4">
-                    {/* Header Section */}
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+        <section className="relative isolate w-full text-white py-20 sm:py-6 lg:py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto z-10">
+                <div
+                    ref={studentRef}
+                    id="student"
+                    className="min-h-[50vh] sm:min-h-[60vh] lg:min-h-[70vh] flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12 bg-[#061621] rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 py-8 sm:py-12 lg:py-16 mb-12 sm:mb-16 lg:mb-20"
+                >
+                    {/* Text Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{
+                            opacity: studentInView ? 1 : 0,
+                            x: studentInView ? 0 : -30,
+                        }}
+                        transition={{ duration: 0.6 }}
+                        className="w-full lg:w-1/2 text-center lg:text-left flex flex-col justify-center"
+                    >
+                        <h4 className="text-[#00ed64] text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
                             The Complete Student Recruitment Package
-                        </h1>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                        </h4>
+                        <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-4 sm:mb-6 leading-relaxed">
                             One platform with 4 connected portals—designed for
                             students, agents, universities, and managed
                             seamlessly by admin.
                         </p>
-                    </div>
 
-                    {/* Portals Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                        {/* Student Portal */}
-                        <div className="group bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-700 hover:shadow-lg transition-all duration-300">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                                    <svg
-                                        className="w-8 h-8 text-white"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+                            <a
+                                href="#"
+                                className="inline-block rounded-md bg-[#00ED64] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black shadow-lg hover:opacity-90 transition-opacity duration-200 text-center"
+                            >
+                                Request a Demo
+                            </a>
+                            <a
+                                href="#"
+                                className="inline-block rounded-md border border-[#00ED64] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-[#00ED64] hover:bg-[#00ED64] hover:text-black transition-all duration-200 text-center"
+                            >
+                                Learn More
+                            </a>
+                        </div>
+                    </motion.div>
+
+                    {/* Image Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={{
+                            opacity: studentInView ? 1 : 0,
+                            x: studentInView ? 0 : 30,
+                        }}
+                        transition={{
+                            duration: 0.8,
+                            ease: "easeInOut",
+                        }}
+                        className="w-full lg:w-1/2 flex justify-center items-center"
+                    >
+                        <div className="w-full max-w-lg">
+                            {/* Main Image */}
+                            <div className="mb-4 sm:mb-6">
+                                <Image
+                                    src={products[0].image}
+                                    alt="Student Portal"
+                                    width={600}
+                                    height={400}
+                                    className="w-full h-auto rounded-lg sm:rounded-xl shadow-lg"
+                                    style={{
+                                        maxHeight: "300px",
+                                        objectFit: "cover",
+                                    }}
+                                    priority
+                                />
+                            </div>
+
+                            {/* Thumbnail Images */}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                                {[1, 2, 3].map((item) => (
+                                    <div key={item} className="aspect-video">
+                                        <Image
+                                            src={products[0].image}
+                                            alt={`Student Portal ${item}`}
+                                            width={200}
+                                            height={150}
+                                            className="w-full h-full rounded-lg shadow-lg object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Optional: Product indicators */}
+                            <div className="flex justify-center lg:justify-start gap-2 mt-4 sm:mt-6">
+                                {products.map((product, index) => (
+                                    <div
+                                        key={product.id}
+                                        className="flex items-center gap-2 text-xs sm:text-sm text-gray-400"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 14l9-5-9-5-9 5 9 5z"
+                                        <div
+                                            className={`w-2 h-2 rounded-full ${
+                                                index === 0
+                                                    ? "bg-[#00ED64]"
+                                                    : "bg-gray-600"
+                                            }`}
                                         />
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l-9 5m9-5v6"
-                                        />
-                                    </svg>
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                                    Student Portal
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Easy application process, document
-                                    submission, and real-time status tracking
-                                    for students.
-                                </p>
+                                        <span>{product.title}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-
-                        {/* Agent Portal */}
-                        <div className="group bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl p-8 border border-green-200 dark:border-green-700 hover:shadow-lg transition-all duration-300">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                                    <svg
-                                        className="w-8 h-8 text-white"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                        />
-                                    </svg>
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                                    Agent Portal
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Manage student applications, track
-                                    commissions, and collaborate with
-                                    universities efficiently.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* University Portal */}
-                        <div className="group bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-2xl p-8 border border-purple-200 dark:border-purple-700 hover:shadow-lg transition-all duration-300">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                                    <svg
-                                        className="w-8 h-8 text-white"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                        />
-                                    </svg>
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                                    University Portal
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Process applications, manage enrollments,
-                                    and communicate with students and agents.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Admin Portal Badge - Centered */}
-                    <div className="text-center mt-12">
-                        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-4 rounded-full shadow-lg">
-                            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                                    />
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                    />
-                                </svg>
-                            </div>
-                            <span className="text-lg font-semibold">
-                                Admin Portal included to manage everything
-                            </span>
-                        </div>
-                    </div>
+                    </motion.div>
                 </div>
+
+                {/* Additional Products Section for smaller screens */}
+                {/* <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8">
+                    {products.map((product, index) => (
+                        <motion.div
+                            key={product.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.2 }}
+                            className="bg-[#061621] rounded-xl p-4 sm:p-6 text-center"
+                        >
+                            <h5 className="text-[#00ed64] text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
+                                {product.title}
+                            </h5>
+                            <p className="text-gray-300 text-sm sm:text-base">
+                                {product.description}
+                            </p>
+                        </motion.div>
+                    ))}
+                </div> */}
             </div>
-        </>
+
+            {/* Background decorative elements */}
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#00ED64] opacity-5 rounded-full blur-3xl"></div>
+            </div>
+        </section>
     );
 }
