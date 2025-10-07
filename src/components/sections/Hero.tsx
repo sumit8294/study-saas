@@ -8,7 +8,7 @@ import HeroGrid from "@/components/ui/HeroGrid";
 export default function Hero() {
     return (
         <section
-            className="relative bg-[#043632] text-white px-8 overflow-x-hidden overflow-y-clip"
+            className="relative bg-[#043632] text-white sm:px-8 overflow-x-hidden overflow-y-clip"
             style={{
                 borderBottomLeftRadius: "12%",
                 borderBottomRightRadius: "12%",

@@ -56,7 +56,7 @@ const PricingSection = () => {
             </section>
 
             {/* Pricing Cards Section */}
-            <section className="mt-[-2rem] pb-8">
+            <section className="mt-[-2rem] pb-16">
                 <div className="container mx-auto px-4 flex justify-center">
                     <div className="grid grid-cols-1 max-w-7xl lg:grid-cols-3 gap-6 ">
                         {/* Starter Plan */}

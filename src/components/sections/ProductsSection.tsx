@@ -106,7 +106,7 @@ export default function ProductsSection() {
                 </div>
 
                 {/* ===== Layout Grid ===== */}
-                <div className="px-8 mx-auto grid grid-cols-1 md:grid-cols-6 gap-8 relative z-10">
+                <div className="sm:px-8 mx-auto grid grid-cols-1 md:grid-cols-6 gap-8 relative z-10">
                     {/* ===== Sidebar ===== */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-40">
@@ -129,7 +129,7 @@ export default function ProductsSection() {
                                             });
                                         }}
                                     >
-                                        <h3 className="text-sm font-semibold">
+                                        <h3 className="text-sm">
                                             {product.title}
                                         </h3>
                                         {activeTab === product.id && (
