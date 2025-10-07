@@ -35,7 +35,7 @@ export default function Page() {
             <PriceSection />
             {/* <BlogSection /> */}
             {/* <ContactSection /> */}
-            <NewsLetterSection />
+            {/* <NewsLetterSection /> */}
 
             {/* <StudentPortalSection />
             <UniversityPortalSection />

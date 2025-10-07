@@ -71,7 +71,7 @@ export default function AllProducts() {
                                 href="#"
                                 className="inline-block rounded-md bg-[#00ED64] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black shadow-lg hover:opacity-90 transition-opacity duration-200 text-center"
                             >
-                                Request a Demo
+                                Request Demo
                             </a>
                             <a
                                 href="#"

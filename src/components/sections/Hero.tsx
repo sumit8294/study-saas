@@ -66,13 +66,13 @@ export default function Hero() {
                                 href="#"
                                 className="inline-block rounded-md bg-[#00ED64] px-6 py-3 text-sm font-semibold text-black shadow-lg hover:opacity-90"
                             >
-                                Start Your Free 14-Day Trial
+                                Request demo
                             </a>
                             <a
                                 href="#"
                                 className="inline-block rounded-md border border-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
                             >
-                                Request a Demo
+                                Contact us
                             </a>
                         </div>
                     </div>

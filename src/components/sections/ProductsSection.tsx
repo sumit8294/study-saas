@@ -175,10 +175,10 @@ export default function ProductsSection() {
                                 <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                     AI-enabled Intelligent Search
                                 </h3>
-                                <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
+                                {/* <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                     Find the Right Information — Instantly and
                                     Accurately
-                                </h4>
+                                </h4> */}
                                 <p className="text-gray-300 mb-3">
                                     Empower students, agents, and universities
                                     with AI-powered search that delivers precise
@@ -248,10 +248,10 @@ export default function ProductsSection() {
                                 <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                     Document Verification & Authentication
                                 </h3>
-                                <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
+                                {/* <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                     Build Trust with Secure and Verified
                                     Submissions
-                                </h4>
+                                </h4> */}
                                 <p className="text-gray-300 mb-3">
                                     Ensure every uploaded document is genuine,
                                     validated, and compliant with university or
@@ -321,10 +321,10 @@ export default function ProductsSection() {
                                 <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                     Real-time Reports & Analytics
                                 </h3>
-                                <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
+                                {/* <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                     Make Smarter Decisions with Data at Your
                                     Fingertips
-                                </h4>
+                                </h4> */}
                                 <p className="text-gray-300 mb-3">
                                     Track applications, monitor performance, and
                                     get instant insights into every stage of the
@@ -393,10 +393,10 @@ export default function ProductsSection() {
                                 <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                     Secure Wallet & Transactions
                                 </h3>
-                                <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
+                                {/* <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                     Simplify Payments with Confidence and
                                     Transparency
-                                </h4>
+                                </h4> */}
                                 <p className="text-gray-300 mb-3">
                                     Enable safe deposits, fee payments, and
                                     refunds through an integrated secure wallet.
@@ -466,10 +466,10 @@ export default function ProductsSection() {
                                 <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                                     Seamless Communication
                                 </h3>
-                                <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
+                                {/* <h4 className="text-lg sm:text-xl font-semibold text-[#00ed64] mb-4">
                                     Stay Connected Across Students, Agents, and
                                     Universities
-                                </h4>
+                                </h4> */}
                                 <p className="text-gray-300 mb-3">
                                     Built-in chat, notifications, and updates
                                     keep everyone on the same page without

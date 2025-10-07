@@ -482,13 +482,13 @@ export default function Home() {
                                 href="#"
                                 className="inline-block rounded-md bg-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-indigo-400"
                             >
-                                Start Your Free 14-Day Trial
+                                Request demo
                             </a>
                             <a
                                 href="#"
                                 className="inline-block rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
                             >
-                                Request a Demo
+                                Contact us
                             </a>
                         </div>
                     </div>
