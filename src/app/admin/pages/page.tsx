@@ -1,88 +1,206 @@
 "use client";
 
-import { useState } from "react";
-import { FileDown, FileText, Plus, SearchIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, SearchIcon, Edit, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Page {
     id: number;
+    uuid: string;
+    title: string;
     name: string;
     slug: string;
-    type: string;
-    status: "Active" | "Inactive";
+    type: "INFORMATION" | "NEED_HELP" | "LEGAL" | "CUSTOM";
+    status: "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+    author: string;
+    publishedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface PaginationInfo {
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    hasNext: boolean;
+    hasPrev: boolean;
 }
 
 export default function PagesTable() {
-    const [pages, setPages] = useState<Page[]>([
-        {
-            id: 1,
-            name: "About Us",
-            slug: "about-us",
-            type: "Information",
-            status: "Active",
-        },
-        {
-            id: 2,
-            name: "News",
-            slug: "news",
-            type: "Information",
-            status: "Active",
-        },
-        {
-            id: 3,
-            name: "Investor Relations",
-            slug: "investor-relations",
-            type: "Information",
-            status: "Active",
-        },
-        {
-            id: 4,
-            name: "Careers",
-            slug: "careers",
-            type: "Information",
-            status: "Active",
-        },
-        {
-            id: 5,
-            name: "Contact Us",
-            slug: "contact-us",
-            type: "Need Help",
-            status: "Active",
-        },
-        {
-            id: 6,
-            name: "FAQ",
-            slug: "faq",
-            type: "Need Help",
-            status: "Active",
-        },
-        {
-            id: 7,
-            name: "Refund Policy",
-            slug: "refund-policy",
-            type: "Need Help",
-            status: "Active",
-        },
-        {
-            id: 8,
-            name: "Help Docs",
-            slug: "help-docs",
-            type: "Need Help",
-            status: "Active",
-        },
-    ]);
-
+    const router = useRouter();
+    const [pages, setPages] = useState<Page[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [actionLoading, setActionLoading] = useState<number | null>(null);
+    const [pagination, setPagination] = useState<PaginationInfo>({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        hasNext: false,
+        hasPrev: false,
+    });
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    const handleDelete = (id: number) => {
-        setPages(pages.filter((page) => page.id !== id));
+    const fetchPages = async (search = "", page = 1, limit = itemsPerPage) => {
+        try {
+            setLoading(true);
+            const params = new URLSearchParams();
+            if (search) params.append("search", search);
+            params.append("page", page.toString());
+            params.append("limit", limit.toString());
+
+            const url = `/api/pages?${params.toString()}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch pages");
+            }
+
+            const data = await response.json();
+            setPages(data.pages);
+            setPagination(data.pagination);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+            console.error("Error fetching pages:", err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const filteredPages = pages.filter(
-        (page) =>
-            page.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            page.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            page.type.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    useEffect(() => {
+        fetchPages();
+    }, []);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            fetchPages(searchTerm, 1, itemsPerPage);
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [searchTerm, itemsPerPage]);
+
+    const handleStatusUpdate = async (
+        id: number,
+        newStatus: Page["status"]
+    ) => {
+        try {
+            setActionLoading(id);
+            const response = await fetch(`/api/pages/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update page status");
+            }
+
+            fetchPages(searchTerm, pagination.currentPage, itemsPerPage);
+        } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Failed to update page status"
+            );
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (
+            !confirm(
+                "Are you sure you want to delete this page? This action cannot be undone."
+            )
+        ) {
+            return;
+        }
+
+        try {
+            setActionLoading(id);
+            const response = await fetch(`/api/pages/${id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete page");
+            }
+
+            fetchPages(searchTerm, pagination.currentPage, itemsPerPage);
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : "Failed to delete page"
+            );
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    const handleCreate = () => {
+        router.push("/admin/pages/create");
+    };
+
+    const handleEdit = (id: number) => {
+        router.push(`/admin/pages/edit/${id}`);
+    };
+
+    const getStatusBadge = (status: Page["status"]) => {
+        const statusConfig = {
+            ACTIVE: {
+                color: "bg-purple-600/20 text-purple-400",
+                label: "Active",
+            },
+            DRAFT: {
+                color: "bg-yellow-600/20 text-yellow-400",
+                label: "Draft",
+            },
+            INACTIVE: {
+                color: "bg-gray-600/20 text-gray-400",
+                label: "Inactive",
+            },
+            ARCHIVED: {
+                color: "bg-red-600/20 text-red-400",
+                label: "Archived",
+            },
+        };
+
+        const config = statusConfig[status];
+
+        return (
+            <span
+                className={`px-2 py-1 text-xs font-semibold rounded-full ${config.color}`}
+            >
+                {config.label}
+            </span>
+        );
+    };
+
+    const getTypeLabel = (type: Page["type"]) => {
+        const typeLabels = {
+            INFORMATION: "Information",
+            NEED_HELP: "Need Help",
+            LEGAL: "Legal",
+            CUSTOM: "Custom",
+        };
+        return typeLabels[type];
+    };
+
+    const handlePageChange = (newPage: number) => {
+        fetchPages(searchTerm, newPage, itemsPerPage);
+    };
+
+    if (loading && pages.length === 0) {
+        return (
+            <div className="space-y-6">
+                <div className="flex justify-center items-center py-12">
+                    <div className="text-white">Loading pages...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -92,15 +210,27 @@ export default function PagesTable() {
                     <h1 className="text-2xl font-semibold text-white">Pages</h1>
                     <p className="text-gray-400 text-sm">
                         Manage all static pages for your application.
+                        {pagination.totalCount > 0 &&
+                            ` (${pagination.totalCount} pages)`}
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    <button
+                        onClick={handleCreate}
+                        className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                    >
                         <Plus className="w-4 h-4" />
                         Create
                     </button>
                 </div>
             </div>
+
+            {/* Error Message */}
+            {error && (
+                <div className="p-4 bg-red-500/10 border border-red-500 rounded-lg">
+                    <p className="text-red-400 text-sm">{error}</p>
+                </div>
+            )}
 
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -143,53 +273,78 @@ export default function PagesTable() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-700">
-                        {filteredPages.map((page) => (
+                        {pages.map((page, index) => (
                             <tr
                                 key={page.id}
                                 className="hover:bg-[#1F2937] transition"
                             >
                                 {/* Index */}
                                 <td className="px-6 py-4 text-white">
-                                    {page.id}
+                                    {(pagination.currentPage - 1) *
+                                        itemsPerPage +
+                                        index +
+                                        1}
                                 </td>
 
                                 {/* Page Name */}
-                                <td className="px-6 py-4 whitespace-nowrap text-white">
-                                    {page.name}
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-white font-medium">
+                                        {page.title}
+                                    </div>
+                                    <div className="text-gray-400 text-sm">
+                                        Created by: {page.author}
+                                    </div>
                                 </td>
 
                                 {/* Slug */}
                                 <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                                    {page.slug}
+                                    /{page.slug}
                                 </td>
 
                                 {/* Type */}
                                 <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                                    {page.type}
+                                    {getTypeLabel(page.type)}
                                 </td>
 
                                 {/* Status */}
                                 <td className="px-6 py-4 text-center">
-                                    <span
-                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                                            page.status === "Active"
-                                                ? "bg-purple-600/20 text-purple-400"
-                                                : "bg-gray-700 text-gray-400"
-                                        }`}
+                                    <select
+                                        value={page.status}
+                                        onChange={(e) =>
+                                            handleStatusUpdate(
+                                                page.id,
+                                                e.target.value as Page["status"]
+                                            )
+                                        }
+                                        disabled={actionLoading === page.id}
+                                        className="bg-[#1F2937] border border-gray-600 rounded px-2 py-1 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
                                     >
-                                        {page.status}
-                                    </span>
+                                        <option value="DRAFT">Draft</option>
+                                        <option value="ACTIVE">Active</option>
+                                        <option value="INACTIVE">
+                                            Inactive
+                                        </option>
+                                        <option value="ARCHIVED">
+                                            Archived
+                                        </option>
+                                    </select>
                                 </td>
 
                                 {/* Actions */}
                                 <td className="px-6 py-4 whitespace-nowrap text-right space-x-3">
-                                    <button className="text-indigo-400 hover:text-indigo-300 font-medium">
+                                    <button
+                                        onClick={() => handleEdit(page.id)}
+                                        className="text-indigo-400 hover:text-indigo-300 font-medium"
+                                    >
+                                        <Edit className="w-4 h-4 inline mr-1" />
                                         Edit
                                     </button>
                                     <button
                                         onClick={() => handleDelete(page.id)}
-                                        className="text-red-400 hover:text-red-300 font-medium"
+                                        disabled={actionLoading === page.id}
+                                        className="text-red-400 hover:text-red-300 font-medium disabled:opacity-50"
                                     >
+                                        <Trash2 className="w-4 h-4 inline mr-1" />
                                         Delete
                                     </button>
                                 </td>
@@ -198,23 +353,68 @@ export default function PagesTable() {
                     </tbody>
                 </table>
 
-                {filteredPages.length === 0 && (
+                {pages.length === 0 && !loading && (
                     <div className="p-6 text-center text-gray-400">
-                        No pages found.
+                        {searchTerm
+                            ? "No pages found matching your criteria."
+                            : "No pages found."}
+                    </div>
+                )}
+
+                {loading && pages.length > 0 && (
+                    <div className="p-6 text-center text-gray-400">
+                        Loading...
                     </div>
                 )}
             </div>
 
-            {/* Per Page Control */}
-            <div className="flex justify-between items-center mt-4">
+            {/* Pagination & Per Page Control */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
+                {/* Per Page Control */}
                 <div className="flex items-center gap-2 text-sm">
                     <span className="text-gray-300">Per Page</span>
-                    <select className="border border-gray-600 rounded px-2 py-1 text-sm bg-[#1F2937] text-gray-200">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
+                    <select
+                        value={itemsPerPage}
+                        onChange={(e) =>
+                            setItemsPerPage(Number(e.target.value))
+                        }
+                        className="border border-gray-600 rounded px-2 py-1 text-sm bg-[#1F2937] text-gray-200"
+                    >
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
                     </select>
                 </div>
+
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() =>
+                                handlePageChange(pagination.currentPage - 1)
+                            }
+                            disabled={!pagination.hasPrev}
+                            className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Previous
+                        </button>
+
+                        <span className="text-gray-300 text-sm">
+                            Page {pagination.currentPage} of{" "}
+                            {pagination.totalPages}
+                        </span>
+
+                        <button
+                            onClick={() =>
+                                handlePageChange(pagination.currentPage + 1)
+                            }
+                            disabled={!pagination.hasNext}
+                            className="px-3 py-1 bg-gray-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

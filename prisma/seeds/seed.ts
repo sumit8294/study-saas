@@ -29,39 +29,39 @@ async function main() {
     
     =============
     */
-    const features = await seedPlanFeatures(prisma);
-    const plans = await seedPlans(prisma, features);
-    const users = await seedUsers(prisma);
+    // const features = await seedPlanFeatures(prisma);
+    // const plans = await seedPlans(prisma, features);
+    // const users = await seedUsers(prisma);
     /* RBAC System (Add these lines) */
-    await seedPermissions(prisma);
-    await seedRoles(prisma);
-    await seedRolePermissions(prisma);
+    // await seedPermissions(prisma);
+    // await seedRoles(prisma);
+    // await seedRolePermissions(prisma);
     /* 
     ================ 
     
     General Settings 
     
     =============== */
-    await seedGeneralSettings(prisma);
+    // await seedGeneralSettings(prisma);
     /* ================= Currencies ==================  */
-    await seedCurrencies(prisma);
+    // await seedCurrencies(prisma);
     /* Payment Settings (Add this line) */
-    await seedPaymentSettings(prisma);
+    // await seedPaymentSettings(prisma);
     /* ============== Business data =============*/
-    await seedTenants(prisma, users, plans);
-    await seedPayments(prisma);
-    await seedDomainRequests(prisma);
-    await seedDomains(prisma);
-    await seedSubscriptionRequests(prisma);
-    await seedSubscriptions(prisma);
+    // await seedTenants(prisma, users, plans);
+    // await seedPayments(prisma);
+    // await seedDomainRequests(prisma);
+    // await seedDomains(prisma);
+    // await seedSubscriptionRequests(prisma);
+    // await seedSubscriptions(prisma);
     /* ============== Content management ============= */
-    await seedPages(prisma);
-    await seedWebsiteSectionsWithElements(prisma);
+    // await seedPages(prisma);
+    // await seedWebsiteSectionsWithElements(prisma); // Having issue, better dont seed
     /* ================ Marketing =================*/
-    await seedNewsletterSubscribers(prisma);
-    await seedNewsletterCampaigns(prisma);
+    // await seedNewsletterSubscribers(prisma);
+    // await seedNewsletterCampaigns(prisma);
     /* ===================== Activity logs (add this at the end) =================== */
-    await seedActivityLogs(prisma);
+    // await seedActivityLogs(prisma);
 }
 
 main()

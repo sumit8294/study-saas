@@ -96,7 +96,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             },
             {
                 name: "Promotion",
-                href: "/admin/promotions",
+                href: "/admin/newsletters/create",
                 icon: GiftIcon,
             },
         ],
