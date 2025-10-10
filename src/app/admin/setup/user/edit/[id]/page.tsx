@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Save, RotateCcw } from "lucide-react";
 import SetupSettingsSidebar from "@/components/admin/SetupSettingsSidebar";
 
@@ -12,10 +12,25 @@ interface Role {
     isSystem: boolean;
 }
 
-export default function CreateUserPage() {
+interface UserData {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    roleId: string;
+    employee_code: string;
+    mobile: string;
+    country_code: string;
+}
+
+export default function EditUserPage() {
     const router = useRouter();
+    const params = useParams();
+    const userId = params.id as string;
+
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
+    const [userLoading, setUserLoading] = useState(true);
     const [formData, setFormData] = useState({
         name: "",
         role: "",
@@ -25,12 +40,12 @@ export default function CreateUserPage() {
         employee_code: "",
         mobile: "",
         country_code: "+1",
-        sendWelcome: true,
     });
 
     useEffect(() => {
         fetchRoles();
-    }, []);
+        fetchUser();
+    }, [userId]);
 
     const fetchRoles = async () => {
         try {
@@ -39,14 +54,6 @@ export default function CreateUserPage() {
 
             if (result) {
                 setRoles(result);
-
-                // Set default role to first available role
-                if (result.length > 0) {
-                    setFormData((prev) => ({
-                        ...prev,
-                        role: result[0].name,
-                    }));
-                }
             }
         } catch (error) {
             console.error("Error fetching roles:", error);
@@ -54,40 +61,63 @@ export default function CreateUserPage() {
         }
     };
 
+    const fetchUser = async () => {
+        try {
+            const response = await fetch(`/api/users/${userId}`);
+            const result = await response.json();
+
+            if (result.success) {
+                const userData: UserData = result.data;
+                setFormData({
+                    name: userData.name || "",
+                    role: userData.role || "",
+                    email: userData.email || "",
+                    password: "",
+                    confirmPassword: "",
+                    employee_code: userData.employee_code || "",
+                    mobile: userData.mobile || "",
+                    country_code: userData.country_code || "+1",
+                });
+            } else {
+                alert(result.error || "Failed to load user");
+                router.push("/admin/setup/user");
+            }
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            alert("Failed to load user");
+            router.push("/admin/setup/user");
+        } finally {
+            setUserLoading(false);
+        }
+    };
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        const { name, value, type, checked } = e.target as HTMLInputElement;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: value,
         });
     };
 
     const resetForm = () => {
-        setFormData({
-            name: "",
-            role: roles.length > 0 ? roles[0].name : "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            employee_code: "",
-            mobile: "",
-            country_code: "+1",
-            sendWelcome: true,
-        });
+        fetchUser(); // Reset to original values
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Validation
-        if (formData.password !== formData.confirmPassword) {
+        if (
+            formData.password &&
+            formData.password !== formData.confirmPassword
+        ) {
             alert("Passwords don't match!");
             return;
         }
 
-        if (formData.password.length < 8) {
+        if (formData.password && formData.password.length < 8) {
             alert("Password must be at least 8 characters long!");
             return;
         }
@@ -95,38 +125,48 @@ export default function CreateUserPage() {
         setLoading(true);
 
         try {
-            const response = await fetch("/api/users", {
-                method: "POST",
+            const response = await fetch(`/api/users/${userId}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
-                    password: formData.password,
+                    password: formData.password || undefined, // Only send if provided
                     role: formData.role,
                     employee_code: formData.employee_code,
                     mobile: formData.mobile,
                     country_code: formData.country_code,
-                    sendWelcome: formData.sendWelcome,
                 }),
             });
 
             const result = await response.json();
 
             if (result.success) {
-                alert("User created successfully!");
+                alert("User updated successfully!");
                 router.push("/admin/setup/user");
             } else {
-                alert(result.error || "Failed to create user");
+                alert(result.error || "Failed to update user");
             }
         } catch (error) {
-            console.error("Error creating user:", error);
-            alert("Failed to create user");
+            console.error("Error updating user:", error);
+            alert("Failed to update user");
         } finally {
             setLoading(false);
         }
     };
+
+    if (userLoading) {
+        return (
+            <div className="flex min-h-screen bg-[#0f172a]">
+                <SetupSettingsSidebar />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-white">Loading user data...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-[#0f172a]">
@@ -139,7 +179,7 @@ export default function CreateUserPage() {
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-semibold text-white">
-                            Create a new user
+                            Edit User
                         </h2>
                         <button
                             onClick={() => router.push("/admin/setup/user")}
@@ -252,17 +292,18 @@ export default function CreateUserPage() {
                             {/* Password */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                                    Password{" "}
-                                    <span className="text-red-500">*</span>
+                                    New Password
+                                    <span className="text-gray-400 text-xs ml-2">
+                                        (Leave blank to keep current)
+                                    </span>
                                 </label>
                                 <input
                                     type="password"
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    placeholder="Enter password (min 8 characters)"
+                                    placeholder="Enter new password"
                                     className="w-full px-4 py-2 bg-[#0f172a] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    required
                                     minLength={8}
                                 />
                             </div>
@@ -270,33 +311,17 @@ export default function CreateUserPage() {
                             {/* Confirm Password */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                                    Confirm Password{" "}
-                                    <span className="text-red-500">*</span>
+                                    Confirm New Password
                                 </label>
                                 <input
                                     type="password"
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
-                                    placeholder="Confirm password"
+                                    placeholder="Confirm new password"
                                     className="w-full px-4 py-2 bg-[#0f172a] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    required
                                 />
                             </div>
-                        </div>
-
-                        {/* Welcome Email Checkbox */}
-                        <div className="flex items-center gap-3 mt-6">
-                            <input
-                                type="checkbox"
-                                name="sendWelcome"
-                                checked={formData.sendWelcome}
-                                onChange={handleChange}
-                                className="w-4 h-4 accent-indigo-600"
-                            />
-                            <label className="text-gray-300 text-sm">
-                                Send Welcome Mail
-                            </label>
                         </div>
 
                         {/* Footer Actions */}
@@ -307,7 +332,7 @@ export default function CreateUserPage() {
                                 className="flex items-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 text-white text-sm rounded-lg transition"
                             >
                                 <Save className="w-4 h-4" />
-                                {loading ? "Creating..." : "Save"}
+                                {loading ? "Updating..." : "Update"}
                             </button>
 
                             <button

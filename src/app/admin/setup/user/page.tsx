@@ -1,18 +1,86 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Printer } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Plus, Printer, Edit, Trash2 } from "lucide-react";
 import SetupSettingsSidebar from "@/components/admin/SetupSettingsSidebar";
 
+interface User {
+    id: number;
+    uuid: string;
+    name: string;
+    email: string;
+    role: string;
+    mobile: string | null;
+    employee_code: string | null;
+    created_at: string;
+}
+
 export default function UserManagementPage() {
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            name: "Super Admin",
-            email: "superadmin@apply.com",
-            role: "super-admin",
-        },
-    ]);
+    const router = useRouter();
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch("/api/users");
+            const result = await response.json();
+
+            if (result.success) {
+                setUsers(result.data);
+            } else {
+                alert("Failed to fetch users");
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            alert("Failed to fetch users");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // const handleDelete = async (userId: number) => {
+    //     if (!confirm("Are you sure you want to delete this user?")) {
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch(`/api/users/${userId}`, {
+    //             method: "DELETE",
+    //         });
+
+    //         const result = await response.json();
+
+    //         if (result.success) {
+    //             alert("User deleted successfully");
+    //             fetchUsers(); // Refresh the list
+    //         } else {
+    //             alert(result.error || "Failed to delete user");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error deleting user:", error);
+    //         alert("Failed to delete user");
+    //     }
+    // };
+
+    const handleEdit = (userId: number) => {
+        router.push(`/admin/setup/user/edit/${userId}`);
+    };
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen bg-[#0f172a]">
+                <SetupSettingsSidebar />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-white">Loading...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-[#0f172a]">
@@ -25,7 +93,7 @@ export default function UserManagementPage() {
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-semibold text-white">
-                            Users
+                            Users ({users.length})
                         </h2>
                         <div className="flex items-center gap-3">
                             {/* Print Button */}
@@ -34,12 +102,15 @@ export default function UserManagementPage() {
                                 Print
                             </button>
                             {/* Create Button */}
-                            <a href="/admin/setup/user/create">
-                                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg transition">
-                                    <Plus className="w-4 h-4" />
-                                    Create
-                                </button>
-                            </a>
+                            <button
+                                onClick={() =>
+                                    router.push("/admin/setup/user/create")
+                                }
+                                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg transition"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Create
+                            </button>
                         </div>
                     </div>
 
@@ -61,7 +132,13 @@ export default function UserManagementPage() {
                                         Role
                                     </th>
                                     <th className="px-4 py-3 text-left border-b border-gray-700">
-                                        Action
+                                        Employee Code
+                                    </th>
+                                    <th className="px-4 py-3 text-left border-b border-gray-700">
+                                        Created At
+                                    </th>
+                                    <th className="px-4 py-3 text-left border-b border-gray-700">
+                                        Actions
                                     </th>
                                 </tr>
                             </thead>
@@ -94,16 +171,58 @@ export default function UserManagementPage() {
                                             </a>
                                         </td>
                                         <td className="px-4 py-3 text-gray-300 border-b border-gray-700">
-                                            {user.role}
+                                            <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs">
+                                                {user.role}
+                                            </span>
                                         </td>
                                         <td className="px-4 py-3 text-gray-300 border-b border-gray-700">
-                                            {/* Future action buttons like edit or delete */}
-                                            <span className="text-gray-500 italic">
-                                                -
-                                            </span>
+                                            {user.employee_code || "-"}
+                                        </td>
+                                        <td className="px-4 py-3 text-gray-300 border-b border-gray-700">
+                                            {new Date(
+                                                user.created_at
+                                            ).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-3 text-gray-300 border-b border-gray-700">
+                                            <div className="flex items-center gap-2">
+                                                {user.role == "SUPER_ADMIN" ? (
+                                                    <></>
+                                                ) : (
+                                                    <button
+                                                        onClick={() =>
+                                                            handleEdit(user.id)
+                                                        }
+                                                        className="p-1 text-blue-400 hover:text-blue-300 transition"
+                                                        title="Edit user"
+                                                    >
+                                                        <Edit className="w-4 h-4" />
+                                                    </button>
+                                                )}
+
+                                                {/* <button
+                                                    onClick={() =>
+                                                        handleDelete(user.id)
+                                                    }
+                                                    className="p-1 text-red-400 hover:text-red-300 transition"
+                                                    title="Delete user"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button> */}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
+                                {users.length === 0 && (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="px-4 py-8 text-center text-gray-500"
+                                        >
+                                            No users found. Create your first
+                                            user!
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
