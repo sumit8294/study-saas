@@ -858,6 +858,6 @@ enum UserRole {
   ADMIN
   SUB_ADMIN
   EMPLOYEE
-  STUDENT
-  AGENT
+  // STUDENT
+  // AGENT
 }

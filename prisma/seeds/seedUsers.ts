@@ -22,10 +22,10 @@ export async function seedUsers(prisma: PrismaClient) {
         where: { email: "agent@example.com" },
         update: {},
         create: {
-            name: "John Agent",
+            name: "John",
             email: "agent@example.com",
             device_type: "mobile",
-            role: "AGENT",
+            role: "ADMIN",
             password: hashedPassword,
         },
     });

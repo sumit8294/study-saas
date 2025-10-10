@@ -25,16 +25,16 @@ export async function seedRoles(prisma: PrismaClient) {
             description: "Employee access with specific permissions",
             isSystem: true,
         },
-        {
-            name: "AGENT",
-            description: "Agent access for client management",
-            isSystem: true,
-        },
-        {
-            name: "STUDENT",
-            description: "Student access with basic permissions",
-            isSystem: true,
-        },
+        // {
+        //     name: "AGENT",
+        //     description: "Agent access for client management",
+        //     isSystem: true,
+        // },
+        // {
+        //     name: "STUDENT",
+        //     description: "Student access with basic permissions",
+        //     isSystem: true,
+        // },
     ];
 
     const createdRoles = [];

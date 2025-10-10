@@ -163,7 +163,7 @@ export default function RolesAndPermissionsPage() {
                             </button>
 
                             {/* Create Button */}
-                            <button
+                            {/* <button
                                 onClick={() =>
                                     router.push("/admin/setup/roles/create")
                                 }
@@ -171,7 +171,7 @@ export default function RolesAndPermissionsPage() {
                             >
                                 <Plus className="w-4 h-4" />
                                 Create Role
-                            </button>
+                            </button> */}
                         </div>
                     </div>
 
@@ -265,22 +265,22 @@ export default function RolesAndPermissionsPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() =>
-                                                        router.push(
-                                                            `/admin/setup/roles/edit/${role.id}`
-                                                        )
-                                                    }
-                                                    className="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition"
-                                                    disabled={role.isSystem}
-                                                    title={
-                                                        role.isSystem
-                                                            ? "System roles cannot be edited"
-                                                            : "Edit role"
-                                                    }
-                                                >
-                                                    <Edit className="w-4 h-4" />
-                                                </button>
+                                                {role.name != "SUPER_ADMIN" ? (
+                                                    <button
+                                                        onClick={() =>
+                                                            router.push(
+                                                                `/admin/setup/roles/edit/${role.id}`
+                                                            )
+                                                        }
+                                                        className="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition"
+                                                        title={"Edit role"}
+                                                    >
+                                                        <Edit className="w-4 h-4" />
+                                                    </button>
+                                                ) : (
+                                                    <></>
+                                                )}
+
                                                 {!role.isSystem && (
                                                     <button
                                                         onClick={() =>
