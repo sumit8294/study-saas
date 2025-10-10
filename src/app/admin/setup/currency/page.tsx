@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Edit, Trash2, Save, X } from "lucide-react";
 import SetupSettingsSidebar from "@/components/admin/SetupSettingsSidebar";
+import { useRouter } from "next/navigation";
 
 interface Currency {
-    id: number;
+    id: string;
     name: string;
     code: string;
     rate: number;
@@ -13,59 +14,106 @@ interface Currency {
     position: "left" | "right";
     preview: string;
     status: "Active" | "Inactive";
+    note?: string;
 }
 
 export default function CurrencySettingsPage() {
-    const [currencies, setCurrencies] = useState<Currency[]>([
-        {
-            id: 1,
-            name: "United States Dollar",
-            code: "USD",
-            rate: 1.0,
-            symbol: "$",
-            position: "left",
-            preview: "$0.00",
-            status: "Active",
-        },
-        {
-            id: 2,
-            name: "Bangladeshi Taka",
-            code: "BDT",
-            rate: 119.67,
-            symbol: "৳",
-            position: "left",
-            preview: "৳0.00",
-            status: "Active",
-        },
-        {
-            id: 3,
-            name: "Indian Rupee",
-            code: "INR",
-            rate: 110.0,
-            symbol: "₹",
-            position: "left",
-            preview: "₹0.00",
-            status: "Active",
-        },
-        {
-            id: 4,
-            name: "Nigerian Naira",
-            code: "NGN",
-            rate: 1592.35,
-            symbol: "₦",
-            position: "left",
-            preview: "₦0.00",
-            status: "Active",
-        },
-    ]);
+    const [currencies, setCurrencies] = useState<Currency[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string>("");
+    const [error, setError] = useState<string>("");
 
-    const handleEdit = (id: number) => {
-        console.log("Edit currency ID:", id);
+    const router = useRouter();
+
+    // Fetch currencies
+    useEffect(() => {
+        fetchCurrencies();
+    }, []);
+
+    // Auto-hide toasts
+    useEffect(() => {
+        if (success || error) {
+            const timer = setTimeout(() => {
+                setSuccess("");
+                setError("");
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [success, error]);
+
+    const fetchCurrencies = async () => {
+        try {
+            const response = await fetch("/api/setup/currencies");
+            const data = await response.json();
+
+            if (response.ok) {
+                setCurrencies(data);
+            } else {
+                showToast(data.error || "Failed to load currencies", "error");
+            }
+        } catch (error) {
+            console.error("Error fetching currencies:", error);
+            showToast("Failed to load currencies", "error");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleDelete = (id: number) => {
-        setCurrencies(currencies.filter((currency) => currency.id !== id));
+    const showToast = (message: string, type: "success" | "error") => {
+        if (type === "success") {
+            setSuccess(message);
+            setError("");
+        } else {
+            setError(message);
+            setSuccess("");
+        }
     };
+
+    const handleEdit = (id: string) => {
+        router.push(`/admin/setup/currency/edit/${id}`);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this currency?")) {
+            return;
+        }
+
+        setDeletingId(id);
+
+        try {
+            const response = await fetch(`/api/setup/currencies/${id}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                showToast("Currency deleted successfully!", "success");
+                await fetchCurrencies(); // Refresh the list
+            } else {
+                const errorData = await response.json();
+                showToast(
+                    errorData.error || "Failed to delete currency",
+                    "error"
+                );
+            }
+        } catch (error) {
+            console.error("Error deleting currency:", error);
+            showToast("Failed to delete currency", "error");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen bg-[#0f172a]">
+                <SetupSettingsSidebar />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-white">Loading currencies...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-[#0f172a]">
@@ -74,15 +122,43 @@ export default function CurrencySettingsPage() {
 
             {/* Main Content */}
             <div className="flex-1 mt-6 ml-0 lg:ml-6 lg:mt-0 mb-6 bg-[#111827] rounded-xl shadow-lg border border-white/10 p-6">
+                {/* Toast Notifications */}
+                {success && (
+                    <div className="mb-6 p-4 bg-green-500/10 border border-green-500 rounded-lg flex justify-between items-center">
+                        <p className="text-green-400 text-sm">{success}</p>
+                        <button
+                            onClick={() => setSuccess("")}
+                            className="text-green-400 hover:text-green-300"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg flex justify-between items-center">
+                        <p className="text-red-400 text-sm">{error}</p>
+                        <button
+                            onClick={() => setError("")}
+                            className="text-red-400 hover:text-red-300"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                )}
+
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-semibold text-white">
                         Currency Settings
                     </h2>
-                    <a href="/admin/setup/currency/create">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-all">
-                            <Plus className="w-4 h-4" /> Create
-                        </button>
-                    </a>
+                    <button
+                        onClick={() =>
+                            router.push("/admin/setup/currency/create")
+                        }
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-all"
+                    >
+                        <Plus className="w-4 h-4" /> Create
+                    </button>
                 </div>
 
                 {/* Table */}
@@ -115,7 +191,7 @@ export default function CurrencySettingsPage() {
                                         {currency.code}
                                     </td>
                                     <td className="px-4 py-3">
-                                        {currency.rate.toFixed(2)}
+                                        {currency.rate.toFixed(4)}
                                     </td>
                                     <td className="px-4 py-3">
                                         {currency.symbol}
@@ -150,25 +226,34 @@ export default function CurrencySettingsPage() {
                                             onClick={() =>
                                                 handleDelete(currency.id)
                                             }
-                                            className="p-2 bg-red-600 hover:bg-red-500 text-white rounded-lg transition-all"
+                                            disabled={
+                                                deletingId === currency.id
+                                            }
+                                            className="p-2 bg-red-600 hover:bg-red-500 text-white rounded-lg transition-all disabled:opacity-50"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            {deletingId === currency.id ? (
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <Trash2 className="w-4 h-4" />
+                                            )}
                                         </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+
+                    {currencies.length === 0 && (
+                        <div className="text-center py-8 text-gray-400">
+                            No currencies found. Create your first currency to
+                            get started.
+                        </div>
+                    )}
                 </div>
 
                 {/* Per Page Section */}
                 <div className="mt-4 flex items-center gap-3 text-gray-400">
-                    <span>Per Page</span>
-                    <select className="bg-[#1F2937] border border-gray-700 rounded-lg text-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
+                    <span>Showing {currencies.length} currencies</span>
                 </div>
             </div>
         </div>

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Save, X } from "lucide-react";
 import SetupSettingsSidebar from "@/components/admin/SetupSettingsSidebar";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-export default function CreateCurrencyPage() {
+export default function EditCurrencyPage() {
     const [formData, setFormData] = useState({
         name: "",
         code: "",
@@ -16,49 +16,56 @@ export default function CreateCurrencyPage() {
         note: "",
     });
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState<string>("");
     const [error, setError] = useState<string>("");
 
     const router = useRouter();
+    const params = useParams();
+    const currencyId = params.id as string;
 
-    const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >
-    ) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    // Fetch currency data
+    useEffect(() => {
+        if (currencyId) {
+            fetchCurrency();
+        }
+    }, [currencyId]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
+    // Auto-hide toasts
+    useEffect(() => {
+        if (success || error) {
+            const timer = setTimeout(() => {
+                setSuccess("");
+                setError("");
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [success, error]);
 
+    const fetchCurrency = async () => {
         try {
-            const response = await fetch("/api/setup/currencies", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
+            const response = await fetch(`/api/setup/currencies/${currencyId}`);
+            const data = await response.json();
 
             if (response.ok) {
-                showToast("Currency created successfully!", "success");
-                setTimeout(() => {
-                    router.push("/admin/setup/currency");
-                }, 1000);
+                setFormData({
+                    name: data.name,
+                    code: data.code,
+                    rate: data.rate.toString(),
+                    symbol: data.symbol,
+                    position: data.position,
+                    status: data.status,
+                    note: data.note || "",
+                });
             } else {
-                const errorData = await response.json();
-                showToast(
-                    errorData.error || "Failed to create currency",
-                    "error"
-                );
+                showToast(data.error || "Failed to load currency", "error");
+                router.push("/admin/setup/currency");
             }
         } catch (error) {
-            console.error("Error creating currency:", error);
-            showToast("Failed to create currency", "error");
+            console.error("Error fetching currency:", error);
+            showToast("Failed to load currency", "error");
+            router.push("/admin/setup/currency");
         } finally {
             setLoading(false);
         }
@@ -74,17 +81,65 @@ export default function CreateCurrencyPage() {
         }
     };
 
-    const handleReset = () => {
-        setFormData({
-            name: "",
-            code: "",
-            rate: "",
-            symbol: "",
-            position: "left",
-            status: "active",
-            note: "",
-        });
+    const handleChange = (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >
+    ) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSaving(true);
+
+        try {
+            const response = await fetch(
+                `/api/setup/currencies/${currencyId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                }
+            );
+
+            if (response.ok) {
+                showToast("Currency updated successfully!", "success");
+                setTimeout(() => {
+                    router.push("/admin/setup/currency");
+                }, 1000);
+            } else {
+                const errorData = await response.json();
+                showToast(
+                    errorData.error || "Failed to update currency",
+                    "error"
+                );
+            }
+        } catch (error) {
+            console.error("Error updating currency:", error);
+            showToast("Failed to update currency", "error");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleReset = () => {
+        fetchCurrency(); // Reset to original values
+    };
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen bg-[#0f172a]">
+                <SetupSettingsSidebar />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-white">Loading currency...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-[#0f172a]">
@@ -120,7 +175,7 @@ export default function CreateCurrencyPage() {
 
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold text-white">
-                        Create Currency
+                        Edit Currency
                     </h2>
                     <button
                         onClick={() => router.back()}
@@ -140,7 +195,7 @@ export default function CreateCurrencyPage() {
                         <input
                             type="text"
                             name="name"
-                            placeholder="Enter currency name (e.g., US Dollar)"
+                            placeholder="Enter currency name"
                             value={formData.name}
                             onChange={handleChange}
                             required
@@ -156,7 +211,7 @@ export default function CreateCurrencyPage() {
                         <input
                             type="text"
                             name="code"
-                            placeholder="Enter currency code (e.g., USD)"
+                            placeholder="Enter currency code"
                             value={formData.code}
                             onChange={handleChange}
                             required
@@ -198,7 +253,7 @@ export default function CreateCurrencyPage() {
                         <input
                             type="text"
                             name="symbol"
-                            placeholder="Enter currency symbol (e.g., $)"
+                            placeholder="Enter currency symbol"
                             value={formData.symbol}
                             onChange={handleChange}
                             required
@@ -257,11 +312,11 @@ export default function CreateCurrencyPage() {
                     <div className="flex justify-between items-center pt-4">
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={saving}
                             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-all disabled:opacity-50"
                         >
                             <Save className="w-4 h-4" />
-                            {loading ? "Creating..." : "Create Currency"}
+                            {saving ? "Updating..." : "Update Currency"}
                         </button>
                         <button
                             type="button"

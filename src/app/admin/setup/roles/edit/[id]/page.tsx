@@ -11,7 +11,7 @@ import {
     X,
     Users,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 interface Permission {
     id: string;
@@ -25,7 +25,15 @@ interface PermissionGroup {
     permissions: Permission[];
 }
 
-export default function CreateRolePage() {
+interface Role {
+    id: string;
+    name: string;
+    description?: string;
+    isSystem: boolean;
+    permissions: Permission[];
+}
+
+export default function EditRolePage() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -39,15 +47,44 @@ export default function CreateRolePage() {
     const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [permissionsLoading, setPermissionsLoading] = useState(true);
+    const [roleLoading, setRoleLoading] = useState(true);
     const [success, setSuccess] = useState<string>("");
     const [error, setError] = useState<string>("");
 
     const router = useRouter();
+    const params = useParams();
+    const roleId = params.id as string;
 
-    // Fetch permissions
+    // Fetch role data and permissions
     useEffect(() => {
-        fetchPermissions();
-    }, []);
+        if (roleId) {
+            Promise.all([fetchRole(), fetchPermissions()]);
+        }
+    }, [roleId]);
+
+    const fetchRole = async () => {
+        try {
+            const response = await fetch(`/api/setup/roles/${roleId}`);
+            const data: Role = await response.json();
+
+            if (response.ok) {
+                setFormData({
+                    name: data.name,
+                    description: data.description || "",
+                });
+                setSelectedPermissions(data.permissions.map((p) => p.id));
+            } else {
+                showToast("Failed to load role", "error");
+                router.push("/admin/setup/roles");
+            }
+        } catch (error) {
+            console.error("Error fetching role:", error);
+            showToast("Failed to load role", "error");
+            router.push("/admin/setup/roles");
+        } finally {
+            setRoleLoading(false);
+        }
+    };
 
     const fetchPermissions = async () => {
         try {
@@ -138,8 +175,8 @@ export default function CreateRolePage() {
         setLoading(true);
 
         try {
-            const response = await fetch("/api/setup/roles", {
-                method: "POST",
+            const response = await fetch(`/api/setup/roles/${roleId}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -151,17 +188,17 @@ export default function CreateRolePage() {
             });
 
             if (response.ok) {
-                showToast("Role created successfully!", "success");
+                showToast("Role updated successfully!", "success");
                 setTimeout(() => {
                     router.push("/admin/setup/roles");
                 }, 1000);
             } else {
                 const errorData = await response.json();
-                showToast(errorData.error || "Failed to create role", "error");
+                showToast(errorData.error || "Failed to update role", "error");
             }
         } catch (error) {
-            console.error("Error creating role:", error);
-            showToast("Failed to create role", "error");
+            console.error("Error updating role:", error);
+            showToast("Failed to update role", "error");
         } finally {
             setLoading(false);
         }
@@ -178,11 +215,7 @@ export default function CreateRolePage() {
     };
 
     const resetForm = () => {
-        setFormData({
-            name: "",
-            description: "",
-        });
-        setSelectedPermissions([]);
+        fetchRole(); // Reset to original values
     };
 
     const expandAll = () => {
@@ -192,6 +225,17 @@ export default function CreateRolePage() {
     const collapseAll = () => {
         setExpandedGroups([]);
     };
+
+    if (roleLoading || permissionsLoading) {
+        return (
+            <div className="flex min-h-screen bg-[#0f172a]">
+                <SetupSettingsSidebar />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-white">Loading...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-[#0f172a]">
@@ -230,10 +274,10 @@ export default function CreateRolePage() {
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h2 className="text-2xl font-bold text-white">
-                                Create Role
+                                Edit Role
                             </h2>
                             <p className="text-gray-400 mt-1">
-                                Create a new role with specific permissions
+                                Update role details and permissions
                             </p>
                         </div>
                         <button
@@ -307,134 +351,117 @@ export default function CreateRolePage() {
                                 </div>
                             </div>
 
-                            {permissionsLoading ? (
-                                <div className="text-center py-8">
-                                    <div className="text-gray-400">
-                                        Loading permissions...
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
-                                    {permissionGroups.map((group) => {
-                                        const isExpanded =
-                                            expandedGroups.includes(
-                                                group.category
-                                            );
-                                        const selectedInGroup =
-                                            group.permissions.filter((perm) =>
-                                                selectedPermissions.includes(
-                                                    perm.id
-                                                )
-                                            ).length;
-                                        const allSelected =
-                                            selectedInGroup ===
-                                            group.permissions.length;
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
+                                {permissionGroups.map((group) => {
+                                    const isExpanded = expandedGroups.includes(
+                                        group.category
+                                    );
+                                    const selectedInGroup =
+                                        group.permissions.filter((perm) =>
+                                            selectedPermissions.includes(
+                                                perm.id
+                                            )
+                                        ).length;
+                                    const allSelected =
+                                        selectedInGroup ===
+                                        group.permissions.length;
 
-                                        return (
+                                    return (
+                                        <div
+                                            key={group.category}
+                                            className="bg-[#1F2937] border border-gray-700 rounded-lg overflow-hidden"
+                                        >
+                                            {/* Group Header */}
                                             <div
-                                                key={group.category}
-                                                className="bg-[#1F2937] border border-gray-700 rounded-lg overflow-hidden"
+                                                className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition-colors border-b border-gray-600"
+                                                onClick={() =>
+                                                    toggleGroup(group.category)
+                                                }
                                             >
-                                                {/* Group Header */}
-                                                <div
-                                                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition-colors border-b border-gray-600"
-                                                    onClick={() =>
-                                                        toggleGroup(
-                                                            group.category
-                                                        )
-                                                    }
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={
-                                                                allSelected
-                                                            }
-                                                            onChange={() =>
-                                                                toggleAllInGroup(
-                                                                    group
-                                                                )
-                                                            }
-                                                            onClick={(e) =>
-                                                                e.stopPropagation()
-                                                            }
-                                                            className="w-4 h-4 accent-indigo-600"
-                                                        />
-                                                        <div>
-                                                            <h4 className="text-white font-semibold">
-                                                                {group.category}
-                                                            </h4>
-                                                            <p className="text-sm text-gray-400">
-                                                                {
-                                                                    selectedInGroup
-                                                                }{" "}
-                                                                of{" "}
-                                                                {
-                                                                    group
-                                                                        .permissions
-                                                                        .length
-                                                                }{" "}
-                                                                permissions
-                                                                selected
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        {isExpanded ? (
-                                                            <ChevronUp className="w-5 h-5 text-gray-400" />
-                                                        ) : (
-                                                            <ChevronDown className="w-5 h-5 text-gray-400" />
-                                                        )}
+                                                <div className="flex items-center gap-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={allSelected}
+                                                        onChange={() =>
+                                                            toggleAllInGroup(
+                                                                group
+                                                            )
+                                                        }
+                                                        onClick={(e) =>
+                                                            e.stopPropagation()
+                                                        }
+                                                        className="w-4 h-4 accent-indigo-600"
+                                                    />
+                                                    <div>
+                                                        <h4 className="text-white font-semibold">
+                                                            {group.category}
+                                                        </h4>
+                                                        <p className="text-sm text-gray-400">
+                                                            {selectedInGroup} of{" "}
+                                                            {
+                                                                group
+                                                                    .permissions
+                                                                    .length
+                                                            }{" "}
+                                                            permissions selected
+                                                        </p>
                                                     </div>
                                                 </div>
+                                                <div className="flex items-center gap-2">
+                                                    {isExpanded ? (
+                                                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                                                    ) : (
+                                                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                                                    )}
+                                                </div>
+                                            </div>
 
-                                                {/* Group Content */}
-                                                {isExpanded && (
-                                                    <div className="bg-gray-800/20">
-                                                        {group.permissions.map(
-                                                            (permission) => (
-                                                                <div
-                                                                    key={
-                                                                        permission.id
-                                                                    }
-                                                                    className="flex items-center justify-between p-3 bg-gray-700/30 border-t border-gray-600"
-                                                                >
-                                                                    <div>
-                                                                        <div className="text-white font-medium">
+                                            {/* Group Content */}
+                                            {isExpanded && (
+                                                <div className=" bg-gray-800/20">
+                                                    {group.permissions.map(
+                                                        (permission) => (
+                                                            <div
+                                                                key={
+                                                                    permission.id
+                                                                }
+                                                                className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg border-t border-gray-600"
+                                                            >
+                                                                <div>
+                                                                    <div className="text-white font-medium">
+                                                                        {
+                                                                            permission.name
+                                                                        }
+                                                                    </div>
+                                                                    {permission.description && (
+                                                                        <div className="text-sm text-gray-400 mt-1">
                                                                             {
-                                                                                permission.name
+                                                                                permission.description
                                                                             }
                                                                         </div>
-                                                                        {permission.description && (
-                                                                            <div className="text-sm text-gray-400 mt-1">
-                                                                                {
-                                                                                    permission.description
-                                                                                }
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedPermissions.includes(
-                                                                            permission.id
-                                                                        )}
-                                                                        onChange={() =>
-                                                                            togglePermission(
-                                                                                permission.id
-                                                                            )
-                                                                        }
-                                                                        className="w-4 h-4 accent-indigo-600"
-                                                                    />
+                                                                    )}
                                                                 </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedPermissions.includes(
+                                                                        permission.id
+                                                                    )}
+                                                                    onChange={() =>
+                                                                        togglePermission(
+                                                                            permission.id
+                                                                        )
+                                                                    }
+                                                                    className="w-4 h-4 accent-indigo-600"
+                                                                />
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
 
                             {/* Selected Permissions Summary */}
                             <div className="mt-4 p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-lg">
@@ -465,7 +492,7 @@ export default function CreateRolePage() {
                                 className="flex items-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg transition disabled:opacity-50"
                             >
                                 <Save className="w-4 h-4" />
-                                {loading ? "Creating..." : "Create Role"}
+                                {loading ? "Updating..." : "Update Role"}
                             </button>
 
                             <button
