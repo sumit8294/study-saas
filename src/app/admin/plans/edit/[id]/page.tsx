@@ -448,7 +448,7 @@ export default function EditPlanPage({ params }: Props) {
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
                                         (e.target as HTMLImageElement).src =
-                                            "/plans/default.png";
+                                            "/site/no-image.png";
                                     }}
                                 />
                             </div>

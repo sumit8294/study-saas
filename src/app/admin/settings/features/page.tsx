@@ -562,11 +562,13 @@ export default function FeatureSettingsPage() {
                                                         className="w-10 h-10 object-contain rounded"
                                                     />
                                                 ) : (
-                                                    <div className="w-10 h-10 bg-gray-600 rounded flex items-center justify-center">
-                                                        <span className="text-xs text-gray-400">
-                                                            No Image
-                                                        </span>
-                                                    </div>
+                                                    <img
+                                                        src={
+                                                            "/site/no-image.png"
+                                                        }
+                                                        alt={"No Image"}
+                                                        className="w-10 h-10 object-contain rounded"
+                                                    />
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-gray-300 font-medium">

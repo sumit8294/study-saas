@@ -474,7 +474,7 @@ export default function TestimonialSettingsPage() {
                                             <img
                                                 src={
                                                     element.image ||
-                                                    "/images/user-placeholder.png"
+                                                    "/site/no-image.png"
                                                 }
                                                 alt={element.name}
                                                 className="w-12 h-12 object-cover border rounded-full"

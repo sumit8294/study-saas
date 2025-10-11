@@ -368,14 +368,14 @@ export default function BrandsSettingsPage() {
                                             {brand.order_index}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {/* <img
+                                            <img
                                                 src={
                                                     brand.image ||
-                                                    "/images/logo-placeholder.png"
+                                                    "/site/no-image.png"
                                                 }
                                                 alt={brand.name}
                                                 className="w-16 h-10 object-contain border rounded-md bg-white p-1"
-                                            /> */}
+                                            />
                                         </td>
                                         <td className="px-6 py-4 text-sm text-white">
                                             {brand.name}
@@ -556,15 +556,15 @@ export default function BrandsSettingsPage() {
                                             Logo Preview
                                         </label>
                                         <div className="border border-gray-700 rounded-lg p-4 bg-[#1F2937] flex justify-center">
-                                            {/* <img
+                                            <img
                                                 src={brandForm.image}
                                                 alt="Preview"
                                                 className="max-h-20 max-w-full object-contain"
                                                 onError={(e) => {
                                                     e.currentTarget.src =
-                                                        "/images/logo-placeholder.png";
+                                                        "/site/no-image.png";
                                                 }}
-                                            /> */}
+                                            />
                                         </div>
                                     </div>
                                 )}

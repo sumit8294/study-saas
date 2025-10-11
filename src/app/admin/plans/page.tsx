@@ -168,7 +168,7 @@ export default function PlansPage() {
                                     className="hover:bg-[#1F2937] transition"
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-gray-700">
+                                        <div className="w-12 h-12 relative rounded-lg overflow-hidden">
                                             {/* Using regular img tag to avoid hydration issues */}
                                             <img
                                                 src={plan.image}
@@ -178,7 +178,7 @@ export default function PlansPage() {
                                                     (
                                                         e.target as HTMLImageElement
                                                     ).src =
-                                                        "/plans/default.png";
+                                                        "/site/no-image.png";
                                                 }}
                                             />
                                         </div>

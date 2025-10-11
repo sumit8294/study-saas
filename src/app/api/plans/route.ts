@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
         // Transform the data to match your frontend interface
         const transformedPlans = plans.map((plan) => ({
             id: plan.id,
-            image: plan.image || "/plans/default.png",
+            image: plan.image || "/site/no-image.png",
             name: plan.name,
             amount: plan.amount,
             currency: "USD", // Default currency

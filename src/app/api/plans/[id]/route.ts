@@ -41,7 +41,7 @@ export async function GET(
 
         const transformedPlan = {
             id: plan.id,
-            image: plan.image || "/plans/default.png",
+            image: plan.image || "/site/no-image.png",
             name: plan.name,
             amount: plan.amount,
             currency: "USD",

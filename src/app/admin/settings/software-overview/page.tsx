@@ -570,11 +570,13 @@ export default function SoftwareOverviewPage() {
                                                         className="w-12 h-12 object-cover rounded-lg border border-gray-600"
                                                     />
                                                 ) : (
-                                                    <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center border border-gray-600">
-                                                        <span className="text-xs text-gray-400">
-                                                            No Image
-                                                        </span>
-                                                    </div>
+                                                    <img
+                                                        src={
+                                                            "/site/no-image.png"
+                                                        }
+                                                        alt={"No Image"}
+                                                        className="w-12 h-12 object-cover rounded-lg border border-gray-600"
+                                                    />
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-gray-300 font-medium">

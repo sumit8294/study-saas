@@ -390,11 +390,13 @@ export default function ExplorerElements() {
                                                         className="w-10 h-10 rounded-lg object-cover border border-gray-600"
                                                     />
                                                 ) : (
-                                                    <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center border border-gray-600">
-                                                        <span className="text-xs text-gray-400">
-                                                            No Image
-                                                        </span>
-                                                    </div>
+                                                    <img
+                                                        src={
+                                                            "/site/no-image.png"
+                                                        }
+                                                        alt={"No Image"}
+                                                        className="w-10 h-10 rounded-lg object-cover border border-gray-600"
+                                                    />
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-gray-300 font-medium">
