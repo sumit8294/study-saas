@@ -198,7 +198,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             case "subscription":
                 setOpenSubscription(!openSubscription);
                 break;
-            case "domain":
+            case "domain management":
                 setOpenDomain(!openDomain);
                 break;
             case "account":
