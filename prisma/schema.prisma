@@ -91,7 +91,19 @@ model tech_tenants {
   domains tech_domains[]
   subscription_requests tech_subscription_requests[]  
   subscriptions tech_subscriptions[] 
-  tenantMembers tech_tenant_users[]  
+  tenantMembers tech_tenant_users[] 
+
+  // New relations for tenant-specific data
+  countries       tech_countries[]
+  states          tech_states[]
+  cities          tech_cities[]
+  study_levels    tech_study_levels[]
+  disciplines     tech_disciplines[]
+  partner_types   tech_partner_types[]
+  university_types tech_university_types[]
+  intakes         tech_intakes[]
+  universities    tech_universities[]
+  courses         tech_university_courses[] 
 }
 
 model tech_plan_features {
@@ -1079,29 +1091,235 @@ model tech_agents {
   @@map("tech_agents")
 }
 
+
+
+// Country model with tenant isolation
+model tech_countries {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  tenant_id    Int?     // Nullable for global countries
+  country      String   @db.VarChar(255)
+  country_slug String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  is_deleted   Boolean  @default(false)
+
+  // Relations
+  tenant       tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  states       tech_states[]
+  universities tech_universities[]
+  courses      tech_university_courses[]
+
+  @@unique([tenant_id, country_slug])
+  @@index([country])
+  @@index([country_slug])
+  @@index([tenant_id])
+  @@map("tech_countries")
+}
+
+// State model with tenant isolation
+model tech_states {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  tenant_id    Int?     // Nullable for global states
+  state        String   @db.VarChar(255)
+  state_slug   String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  country_id   Int
+  
+  // Audit Fields
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  is_deleted   Boolean  @default(false)
+
+  // Relations
+  tenant       tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  country      tech_countries @relation(fields: [country_id], references: [id])
+  cities       tech_cities[]
+  universities tech_universities[]
+  courses      tech_university_courses[]
+
+  @@unique([tenant_id, state_slug])
+  @@index([state])
+  @@index([state_slug])
+  @@index([country_id])
+  @@index([tenant_id])
+  @@map("tech_states")
+}
+
+// City model with tenant isolation
+model tech_cities {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  tenant_id    Int?     // Nullable for global cities
+  city         String   @db.VarChar(255)
+  state_id     Int
+  
+  // Audit Fields
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  is_deleted   Boolean  @default(false)
+
+  // Relations
+  tenant       tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  state        tech_states @relation(fields: [state_id], references: [id])
+  universities tech_universities[]
+  courses      tech_university_courses[]
+
+  @@unique([tenant_id, city, state_id]) // Unique city name per state per tenant
+  @@index([city])
+  @@index([state_id])
+  @@index([tenant_id])
+  @@map("tech_cities")
+}
+
+// Study Level model with tenant isolation
+model tech_study_levels {
+  id              Int      @id @default(autoincrement())
+  uuid            String   @unique @default(uuid())
+  tenant_id       Int?     // Nullable for global study levels
+  study_level     String   @db.VarChar(255)
+  studylevel_slug String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  is_deleted      Boolean  @default(false)
+
+  // Relations
+  tenant          tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  courses         tech_university_courses[]
+
+  @@unique([tenant_id, studylevel_slug])
+  @@index([study_level])
+  @@index([studylevel_slug])
+  @@index([tenant_id])
+  @@map("tech_study_levels")
+}
+
+// Discipline model with tenant isolation
+model tech_disciplines {
+  id               Int      @id @default(autoincrement())
+  uuid             String   @unique @default(uuid())
+  tenant_id        Int?     // Nullable for global disciplines
+  discipline       String   @db.VarChar(255)
+  discipline_slug  String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  is_deleted       Boolean  @default(false)
+
+  // Relations
+  tenant           tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  courses          tech_university_courses[]
+
+  @@unique([tenant_id, discipline_slug])
+  @@index([discipline])
+  @@index([discipline_slug])
+  @@index([tenant_id])
+  @@map("tech_disciplines")
+}
+
+// Partner Type model with tenant isolation
+model tech_partner_types {
+  id                    Int      @id @default(autoincrement())
+  uuid                  String   @unique @default(uuid())
+  tenant_id             Int?     // Nullable for global partner types
+  kind_of_partners      String   @db.VarChar(255)
+  kind_of_partners_slug String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+  is_deleted            Boolean  @default(false)
+
+  // Relations
+  tenant                tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  universities          tech_universities[]
+  courses               tech_university_courses[]
+
+  @@unique([tenant_id, kind_of_partners_slug])
+  @@index([kind_of_partners])
+  @@index([kind_of_partners_slug])
+  @@index([tenant_id])
+  @@map("tech_partner_types")
+}
+
+// University Type model with tenant isolation
+model tech_university_types {
+  id                      Int      @id @default(autoincrement())
+  uuid                    String   @unique @default(uuid())
+  tenant_id               Int?     // Nullable for global university types
+  type_of_university      String   @db.VarChar(255)
+  type_of_university_slug String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+  is_deleted              Boolean  @default(false)
+
+  // Relations
+  tenant                  tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  universities            tech_universities[]
+  courses                 tech_university_courses[]
+
+  @@unique([tenant_id, type_of_university_slug])
+  @@index([type_of_university])
+  @@index([type_of_university_slug])
+  @@index([tenant_id])
+  @@map("tech_university_types")
+}
+
+// Intake model with tenant isolation
+model tech_intakes {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  tenant_id    Int?     // Nullable for global intakes
+  intake       String   @db.VarChar(255)
+  intake_slug  String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
+  // Audit Fields
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  is_deleted   Boolean  @default(false)
+
+  // Relations
+  tenant       tech_tenants? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  courses      tech_university_courses[]
+
+  @@unique([tenant_id, intake_slug])
+  @@index([intake])
+  @@index([intake_slug])
+  @@index([tenant_id])
+  @@map("tech_intakes")
+}
+
+// Updated University model with tenant isolation
 model tech_universities {
   // Primary Key & Identification
   id                      Int      @id @default(autoincrement())
   uuid                    String   @unique @default(uuid())
+  tenant_id               Int      // Required - universities are tenant-specific
   
   // University Information
   university              String   @db.VarChar(255)
-  university_slug         String   @unique @db.VarChar(255)
+  university_slug         String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  
   description             String?  @db.Text
   
-  // Location Information
-  country_slug            String   @db.VarChar(255)
-  country                 String   @db.VarChar(255)
-  state                   String   @db.VarChar(255)
+  // Location Information (using relations)
+  country_id              Int
+  state_id                Int
+  city_id                 Int
   address                 String?  @db.Text
   map_url                 String?  @db.Text
   location_url            String?  @db.Text
   
-  // Classification
-  kind_of_partners        String   @db.VarChar(255)
-  type_of_university      String   @db.VarChar(255)
-  kind_of_partners_slug   String   @db.VarChar(255)
-  type_of_university_slug String   @db.VarChar(255)
+  // Classification (using relations)
+  kind_of_partners_id     Int
+  type_of_university_id   Int
   collaboration           String   @db.VarChar(50)
   partner                 String   @db.VarChar(10)
   
@@ -1120,54 +1338,52 @@ model tech_universities {
   updated_at              DateTime @updatedAt
   is_deleted              Boolean  @default(false)
 
-  //Relations
-  courses tech_university_courses[]
+  // Relations
+  tenant               tech_tenants           @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  country              tech_countries         @relation(fields: [country_id], references: [id])
+  state                tech_states            @relation(fields: [state_id], references: [id])
+  city                 tech_cities            @relation(fields: [city_id], references: [id])
+  kind_of_partners     tech_partner_types     @relation(fields: [kind_of_partners_id], references: [id])
+  type_of_university   tech_university_types  @relation(fields: [type_of_university_id], references: [id])
+  courses              tech_university_courses[]
   
   // Indexes
+  @@unique([tenant_id, university_slug])
   @@index([university])
   @@index([university_slug])
-  @@index([country])
-  @@index([country_slug])
-  @@index([kind_of_partners])
-  @@index([type_of_university])
+  @@index([country_id])
+  @@index([state_id])
+  @@index([city_id])
+  @@index([kind_of_partners_id])
+  @@index([type_of_university_id])
   @@index([partner])
   @@index([created_at])
+  @@index([tenant_id])
   @@map("tech_universities")
 }
 
+// Updated Course model with tenant isolation
 model tech_university_courses {
   // Primary Key & Identification
   id                      Int      @id @default(autoincrement())
   uuid                    String   @unique @default(uuid())
-  university_id           Int      // Relation to university
+  tenant_id               Int      // Required - courses are tenant-specific
+  university_id           Int
   
   // Course Information
   course                  String   @db.VarChar(255)
-  course_slug             String   @unique @db.VarChar(255)
-  is_popular              Boolean  @default(false) // Changed from int to boolean
+  course_slug             String   @db.VarChar(255) // Remove unique, make tenant-scoped unique
+  is_popular              Boolean  @default(false)
   
-  // University & Location Info (denormalized for performance)
-  university_name         String   @db.VarChar(255)
-  university_slug         String   @db.VarChar(255)
-  country                 String   @db.VarChar(255)
-  country_slug            String   @db.VarChar(255)
-  state                   String   @db.VarChar(255)
-  state_slug              String   @db.VarChar(255)
-  city                    String   @db.VarChar(255)
-  
-  // Classification
-  study_level             String   @db.VarChar(255)
-  studylevel_slug         String   @db.VarChar(255)
-  discipline              String   @db.VarChar(255)
-  discipline_slug         String   @db.VarChar(255)
-  kind_of_partners        String   @db.VarChar(255)
-  kind_of_partners_slug   String   @db.VarChar(255)
-  type_of_university      String   @db.VarChar(255)
-  type_of_university_slug String   @db.VarChar(255)
-  
-  // Intake Information
-  intake                  String?  @db.Text
-  intake_slug             String   @db.VarChar(255)
+  // Location & Classification (using relations)
+  country_id              Int
+  state_id                Int
+  city_id                 Int
+  study_level_id          Int
+  discipline_id           Int
+  kind_of_partners_id     Int
+  type_of_university_id   Int
+  intake_id               Int?
   
   // Test Score Requirements
   gre_score               String?  @db.VarChar(255)
@@ -1189,7 +1405,7 @@ model tech_university_courses {
   about_the_course        String?  @db.Text
   admission_requirements  String?  @db.Text
   application_deadline    String?  @db.Text
-  tuition_fee             String?  @db.Text // Note: different from tution_fees above
+  tuition_fee             String?  @db.Text
   
   // Media
   image1                  String?  @db.Text
@@ -1203,20 +1419,35 @@ model tech_university_courses {
   is_deleted              Boolean  @default(false)
   
   // Relations
-  university tech_universities @relation(fields: [university_id], references: [id])
+  tenant               tech_tenants           @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  university           tech_universities      @relation(fields: [university_id], references: [id])
+  country              tech_countries         @relation(fields: [country_id], references: [id])
+  state                tech_states            @relation(fields: [state_id], references: [id])
+  city                 tech_cities            @relation(fields: [city_id], references: [id])
+  study_level          tech_study_levels      @relation(fields: [study_level_id], references: [id])
+  discipline           tech_disciplines       @relation(fields: [discipline_id], references: [id])
+  kind_of_partners     tech_partner_types     @relation(fields: [kind_of_partners_id], references: [id])
+  type_of_university   tech_university_types  @relation(fields: [type_of_university_id], references: [id])
+  intake               tech_intakes?          @relation(fields: [intake_id], references: [id])
   student_applications tech_student_applications[]
   agent_student_applications tech_agent_student_applications[]
   
   // Indexes
+  @@unique([tenant_id, course_slug])
   @@index([university_id])
   @@index([course])
   @@index([course_slug])
-  @@index([university_slug])
-  @@index([country])
-  @@index([study_level])
-  @@index([discipline])
+  @@index([country_id])
+  @@index([state_id])
+  @@index([city_id])
+  @@index([study_level_id])
+  @@index([discipline_id])
+  @@index([kind_of_partners_id])
+  @@index([type_of_university_id])
+  @@index([intake_id])
   @@index([is_popular])
   @@index([created_at])
+  @@index([tenant_id])
   @@map("tech_university_courses")
 }
 
